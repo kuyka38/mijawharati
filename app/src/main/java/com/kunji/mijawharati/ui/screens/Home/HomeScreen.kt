@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
+import com.kunji.mijawharati.navigation.ROUT_CATEGORY
 import com.kunji.mijawharati.navigation.ROUT_LOGIN
 import com.kunji.mijawharati.ui.theme.*
 
@@ -70,7 +71,7 @@ fun HomeScreen(navcontoller: NavController) {
 
             Button(
                 onClick = {
-                    navcontoller.navigate(ROUT_LOGIN)
+                    navcontoller.navigate(ROUT_CATEGORY)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
                 modifier = Modifier.fillMaxWidth()

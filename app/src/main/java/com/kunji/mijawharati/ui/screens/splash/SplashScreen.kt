@@ -1,7 +1,6 @@
-package com.kunji.mijawharati.ui.screens.women
+package com.kunji.mijawharati.ui.screens.ladies
 
 import android.annotation.SuppressLint
-import android.window.SplashScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.kunji.mijawharati.navigation.ROUT_HOME
 import com.kunji.mijawharati.navigation.ROUT_LOGIN
 import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.ui.theme.EmeraldGreen

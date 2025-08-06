@@ -74,6 +74,7 @@ fun MenScreen(navController: NavController) {
                 navigationIcon = {
                     IconButton(onClick = { /* Handle back/nav */ }) {
                         Icon(Icons.Default.Menu, contentDescription = "Back")
+
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -87,20 +88,20 @@ fun MenScreen(navController: NavController) {
         bottomBar = {
             NavigationBar(containerColor = EmeraldGreen) {
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+                    icon = { Icon(Icons.Default.Home, contentDescription = "Home",  tint = Color.White) },
                     label = { Text("Home") },
                     selected = selectedIndex == 0,
                     onClick = { selectedIndex = 0 }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
+                    icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites",  tint = Color.White) },
                     label = { Text("Favorites") },
                     selected = selectedIndex == 1,
                     onClick = { selectedIndex = 1 }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-                    label = { Text("Profile") },
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile",  tint = Color.White) },
+                    label = { Text("Profile",) },
                     selected = selectedIndex == 2,
                     onClick = { selectedIndex = 2 }
                 )
@@ -125,7 +126,7 @@ fun MenScreen(navController: NavController) {
                     .fillMaxSize()
             ) {
                 Text(
-                    text = "Define your legacy with MiJawharati’s Men’s Collection — bold, refined pieces crafted to elevate your every stride.",
+                    text = "Define your legacy with MiJawharati’s Men’s Collection bold, refined pieces crafted to elevate your every stride.",
                     fontSize = 15.sp,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )

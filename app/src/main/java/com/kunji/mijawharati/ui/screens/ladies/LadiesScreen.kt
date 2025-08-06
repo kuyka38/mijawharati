@@ -1,4 +1,4 @@
-package com.kunji.mijawharati.ui.screens.women
+package com.kunji.mijawharati.ui.screens.ladies
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -60,7 +60,7 @@ import com.kunji.mijawharati.ui.theme.mustard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WomenScreen(navController: NavController) {
+fun LadiesScreen(navController: NavController) {
 
     val mContext = LocalContext.current
 
@@ -124,7 +124,7 @@ fun WomenScreen(navController: NavController) {
                     .fillMaxSize()
             ) {
                 Text(
-                    text = "Celebrate your sparkle with MiJawharati’s Women’s Collection — elegant pieces crafted to elevate every moment.",
+                    text = "Celebrate your sparkle with MiJawharati’s Women’s Collection elegant pieces crafted to elevate every moment.",
                     fontSize = 15.sp,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -823,6 +823,6 @@ fun WomenScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun WomenScreenPreview() {
-    WomenScreen(navController = rememberNavController())
+fun    LadiesScreenPreview() {
+    LadiesScreen(navController = rememberNavController())
 }

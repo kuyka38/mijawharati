@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.kunji.mijawharati.navigation.ROUT_WOMEN
+import com.kunji.mijawharati.navigation.ROUT_LADIES
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 import com.kunji.mijawharati.R
 
@@ -66,7 +66,7 @@ fun IntentScreen(navController: NavController){
             TopAppBar(
                 title = { Text("Details") },
                 navigationIcon = {
-                    IconButton(onClick = { ROUT_WOMEN }) {
+                    IconButton(onClick = { ROUT_LADIES }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
