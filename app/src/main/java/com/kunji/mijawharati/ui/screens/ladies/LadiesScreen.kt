@@ -2,6 +2,7 @@ package com.kunji.mijawharati.ui.screens.ladies
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,9 +19,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -55,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
+import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 import com.kunji.mijawharati.ui.theme.mustard
 
@@ -67,12 +71,21 @@ fun LadiesScreen(navController: NavController) {
     var selectedIndex by remember { mutableStateOf(0) }
 
     Scaffold(
-        topBar = {
+        topBar = @androidx.compose.runtime.Composable {
             TopAppBar(
                 title = { Text("Women's Collection") },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle back/nav */ }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Back")
+                    IconButton(onClick = {
+                        navController.navigate("ROUT_CATEGORY")
+                    }) {
+                        Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        navController.navigate("CartScreen")
+                    }) {
+                        Icon(Icons.Default.ShoppingCart, contentDescription = "Cart", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -83,7 +96,8 @@ fun LadiesScreen(navController: NavController) {
             )
         },
 
-        bottomBar = {
+
+                bottomBar = {
             NavigationBar(containerColor = EmeraldGreen) {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
@@ -120,6 +134,7 @@ fun LadiesScreen(navController: NavController) {
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
+                    .background(CreamWhite)
                     .verticalScroll(rememberScrollState())
                     .fillMaxSize()
             ) {

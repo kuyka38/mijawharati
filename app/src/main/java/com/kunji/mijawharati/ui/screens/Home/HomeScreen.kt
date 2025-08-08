@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.navigation.ROUT_CATEGORY
+import com.kunji.mijawharati.navigation.ROUT_LANDING
 import com.kunji.mijawharati.navigation.ROUT_LOGIN
 import com.kunji.mijawharati.ui.theme.*
 
@@ -56,7 +57,7 @@ fun HomeScreen(navcontoller: NavController) {
                 fontFamily = FontFamily.Serif
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Text(
                 text = "A celebration of beauty, culture, and self-expression through timeless jewellery — discover your next sparkle with ease.",
@@ -67,11 +68,11 @@ fun HomeScreen(navcontoller: NavController) {
 
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
             Button(
                 onClick = {
-                    navcontoller.navigate(ROUT_CATEGORY)
+                    navcontoller.navigate(ROUT_LANDING)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
                 modifier = Modifier.fillMaxWidth()

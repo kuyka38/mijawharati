@@ -80,10 +80,14 @@ fun RegisterScreen(
                     fontWeight = FontWeight.Bold,
                     color = EmeraldGreen
                 )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+
                 Text(
                     "Create Your Account",
-                    fontSize = 24.sp,
-                    fontFamily = FontFamily.Cursive,
+                    fontSize = 25.sp,
+                    fontFamily = FontFamily.Default,
                     color = EmeraldGreen
                 )
             }

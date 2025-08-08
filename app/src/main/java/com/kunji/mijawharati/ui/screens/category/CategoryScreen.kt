@@ -31,6 +31,7 @@ import com.kunji.mijawharati.ui.theme.EmeraldGreen
 @Composable
 fun CategoryScreen(navController: NavController) {
     var selectedIndex by remember { mutableStateOf(0) }
+    var showMenu by remember { mutableStateOf(false) }
 
     Scaffold(
         bottomBar = {
@@ -89,8 +90,30 @@ fun CategoryScreen(navController: NavController) {
                             titleContentColor = CreamWhite
                         ),
                         navigationIcon = {
-                            IconButton(onClick = { /* TODO */ }) {
-                                Icon(Icons.Default.Menu, contentDescription = "menu", tint = CreamWhite)
+                            Box {
+                                IconButton(onClick = { showMenu = !showMenu }) {
+                                    Icon(Icons.Default.Menu, contentDescription = "menu", tint = CreamWhite)
+                                }
+
+                                DropdownMenu(
+                                    expanded = showMenu,
+                                    onDismissRequest = { showMenu = false }
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text("About") },
+                                        onClick = {
+                                            showMenu = false
+                                            navController.navigate("AboutScreen")
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text("Contact") },
+                                        onClick = {
+                                            showMenu = false
+                                            navController.navigate("ContactsScreen")
+                                        }
+                                    )
+                                }
                             }
                         },
                         actions = {
@@ -135,21 +158,21 @@ fun CategoryScreen(navController: NavController) {
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // Women Card
+                    // Ladies Card
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(200.dp)
                             .padding(horizontal = 20.dp)
                             .clickable {
-                                navController.navigate("WomenScreen")
+                                navController.navigate("LadiesScreen")
                             },
                         elevation = CardDefaults.outlinedCardElevation(5.dp)
                     ) {
                         Box(modifier = Modifier.fillMaxSize()) {
                             Image(
                                 painter = painterResource(id = R.drawable.woman),
-                                contentDescription = "Women's Collection",
+                                contentDescription = "Womens' Collection",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )
@@ -162,7 +185,7 @@ fun CategoryScreen(navController: NavController) {
                                 tint = CreamWhite
                             )
                             Text(
-                                text = "Women's Collection",
+                                text = "Womens' Collection",
                                 fontSize = 26.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 fontFamily = FontFamily.Serif,
