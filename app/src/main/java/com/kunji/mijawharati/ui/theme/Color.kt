@@ -17,7 +17,7 @@ val DustyMauve = Color(0xFFA28D9C)
 val WarmRose = Color(0xFFE89DA8)
 
 
-val CreamWhite = Color(0xFFFCF6E3)
+val CreamWhite = Color(0xFFFFFFFF)
 val EmeraldGreen = Color(0xFF156944)
 val JetBlack = Color(0xFF1A1A1A)
 val SoftGold = Color(0xFFC2B280)

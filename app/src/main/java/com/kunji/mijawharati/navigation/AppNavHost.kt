@@ -21,17 +21,17 @@ import com.kunji.mijawharati.ui.screens.category.CategoryScreen
 import com.kunji.mijawharati.ui.screens.contact.ContactsScreen
 import com.kunji.mijawharati.ui.screens.intent.IntentScreen
 import com.kunji.mijawharati.ui.screens.onboarding.HomeScreen
-import com.kunji.mijawharati.ui.screens.men.MenScreen
 import com.kunji.mijawharati.ui.screens.ladies.SplashScreen
 import com.kunji.mijawharati.ui.screens.ladies.LadiesScreen
 import com.kunji.mijawharati.viewmodel.AuthViewModel
 import com.kunji.mijawharati.ui.screens.auth.RegisterScreen
+import com.kunji.mijawharati.ui.screens.ladies.MenScreen
 import com.kunji.mijawharati.ui.screens.landing.LandingScreen
 import com.kunji.mijawharati.ui.screens.products.AddProductScreen
 import com.kunji.mijawharati.ui.screens.products.EditProductScreen
 import com.kunji.mijawharati.ui.screens.products.ProductListScreen
 
-import com.kunji.swaggy.viewmodel.ProductViewModel
+import com.kunji.mijawharati.viewmodel.ProductViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -39,7 +39,7 @@ import com.kunji.swaggy.viewmodel.ProductViewModel
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_SPLASH,
+    startDestination: String = ROUT_PRODUCT_LIST,
     productViewModel: ProductViewModel = viewModel(),
 
     ) {
@@ -61,7 +61,7 @@ fun AppNavHost(
         }
 
 
-        composable(ROUT_CATEGORY) {
+        composable("CategoryScreen") {
             CategoryScreen(navController)
         }
 
@@ -135,10 +135,6 @@ fun AppNavHost(
                 EditProductScreen(productId, navController, productViewModel)
             }
         }
-
-
-
-
 
 
     }

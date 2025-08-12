@@ -49,7 +49,8 @@ fun ContactsScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center)
-                .background(CreamWhite.copy(alpha = 0.85f), shape = MaterialTheme.shapes.medium)
+
+                .background(color = Color(0xFFE8F7E2).copy(alpha = 0.85f), shape = MaterialTheme.shapes.medium)
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

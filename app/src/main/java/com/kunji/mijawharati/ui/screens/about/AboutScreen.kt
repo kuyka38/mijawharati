@@ -37,7 +37,7 @@ fun AboutScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .background(CreamWhite.copy(alpha = 0.85f))
+                .background(color = Color(0xFFE8F7E2).copy(alpha = 0.85f))
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

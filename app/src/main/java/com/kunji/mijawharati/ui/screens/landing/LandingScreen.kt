@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,7 +45,10 @@ fun LandingScreen(navController: NavController) {
                 navigationIcon = {
                     IconButton(onClick = { /* TODO: Menu */ }) {
                         Icon(Icons.Default.Menu, contentDescription = "Menu")
+
                     }
+
+
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = EmeraldGreen,
@@ -66,9 +70,17 @@ fun LandingScreen(navController: NavController) {
                         Text("Home", color = CreamWhite, fontSize = 12.sp)
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(Icons.Default.Favorite, contentDescription = "Favorite", tint = CreamWhite)
-                        Text("Favorite", color = CreamWhite, fontSize = 12.sp)
+                        Icon(Icons.Default.Person, contentDescription = "Favorite", tint = CreamWhite)
+                        Text("profile", color = CreamWhite, fontSize = 12.sp)
                     }
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Default.Favorite, contentDescription = "Favorite", tint = CreamWhite)
+                        Text("favorite", color = CreamWhite, fontSize = 12.sp)
+                    }
+
+
+
                 }
             }
         }
@@ -82,12 +94,12 @@ fun LandingScreen(navController: NavController) {
         ) {
             // Banner Image
             Image(
-                painter = painterResource(id = R.drawable.woman),
+                painter = painterResource(id = R.drawable.img_6),
                 contentDescription = "Banner",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(220.dp)
+                    .height(250.dp)
                     .padding(16.dp)
                     .clip(RoundedCornerShape(12.dp))
             )
@@ -96,9 +108,8 @@ fun LandingScreen(navController: NavController) {
 
             // Discover Title
             Text(
-                text = "Discover Our Collections",
+                text = "Shop Our unique pieces",
                 style = MaterialTheme.typography.titleMedium,
-                color = EmeraldGreen,
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
             )
 
@@ -117,7 +128,7 @@ fun LandingScreen(navController: NavController) {
                         .clip(CircleShape)
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.earing3),
+                    painter = painterResource(id = R.drawable.brace4),
                     contentDescription = "Earrings",
                     modifier = Modifier
                         .size(70.dp)
@@ -145,7 +156,7 @@ fun LandingScreen(navController: NavController) {
             Text(
                 text = "Our Upcoming Korean Collection",
                 style = MaterialTheme.typography.titleMedium,
-                color = EmeraldGreen,
+
                 modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp)
             )
 
@@ -158,7 +169,7 @@ fun LandingScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.img_2),
+                    painter = painterResource(id = R.drawable.img_3),
                     contentDescription = "Korean Necklace",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -167,7 +178,7 @@ fun LandingScreen(navController: NavController) {
                         .clip(RoundedCornerShape(10.dp))
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.img_3),
+                    painter = painterResource(id = R.drawable.img_4),
                     contentDescription = "Korean Earring",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -176,7 +187,7 @@ fun LandingScreen(navController: NavController) {
                         .clip(RoundedCornerShape(10.dp))
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.img_4),
+                    painter = painterResource(id = R.drawable.img_2),
                     contentDescription = "Korean Pendant",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -185,6 +196,17 @@ fun LandingScreen(navController: NavController) {
                         .clip(RoundedCornerShape(10.dp))
                 )
             }
+
+            Spacer(modifier = Modifier.height(5.dp) )
+
+            Text(
+                text = "Delicate, timeless, and effortlessly chic — our upcoming Korean Collection is your next jewellery obsession.",
+                style = MaterialTheme.typography.titleMedium,
+
+                modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp)
+            )
+
+
             Spacer(modifier = Modifier.height(15.dp) )
 
             Box(
@@ -212,7 +234,7 @@ fun LandingScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    navController.navigate("ROUT_CATEGORY")
+                    navController.navigate("CategoryScreen")
                 },
                 modifier = Modifier
                     .fillMaxWidth()

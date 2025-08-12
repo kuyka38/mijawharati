@@ -6,18 +6,23 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,11 +32,11 @@ import coil.compose.rememberAsyncImagePainter
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.navigation.ROUT_ADD_PRODUCT
 import com.kunji.mijawharati.navigation.ROUT_PRODUCT_LIST
-import com.kunji.swaggy.viewmodel.ProductViewModel
+import com.kunji.mijawharati.viewmodel.ProductViewModel
 
-// Aesthetic colors
-val EmeraldGreen = (com.kunji.mijawharati.ui.theme.EmeraldGreen)
-val CreamWhite = (com.kunji.mijawharati.ui.theme.CreamWhite)
+// Theme Colors
+private val EmeraldGreen = Color(0xFF006A4E)
+private val CreamWhite = Color(0xFFFCFCF7)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +48,10 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
     var showMenu by remember { mutableStateOf(false) }
 
     val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        imageUri = uri
+        uri?.let {
+            imageUri = it
+            Log.d("ImagePicker", "Selected image URI: $it")
+        }
     }
 
     Scaffold(
@@ -51,24 +59,27 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Add Product", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        "Upload a Product",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = EmeraldGreen
+                    )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = EmeraldGreen,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White,
-                    actionIconContentColor = Color.White
-                ),
+                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = CreamWhite),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.Default.KeyboardArrowLeft, contentDescription = "Back")
+                        Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Back", tint = EmeraldGreen)
                     }
                 },
                 actions = {
                     IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Menu")
+                        Icon(Icons.Default.MoreVert, contentDescription = "Menu", tint = EmeraldGreen)
                     }
-                    DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false }
+                    ) {
                         DropdownMenuItem(
                             text = { Text("Product List") },
                             onClick = {
@@ -90,73 +101,53 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
         bottomBar = {
             BottomNavigationBar(navController)
         },
-        content = { padding ->
+        content = { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
+                    .padding(paddingValues)
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Product Name
-                OutlinedTextField(
+                SimpleTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Product Name") },
-                    leadingIcon = {
-                        Icon(painter = painterResource(R.drawable.name), contentDescription = "name")
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = EmeraldGreen,
-                        unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = EmeraldGreen
-                    )
+                    label = "Product Name",
+                    iconRes = R.drawable.name
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                // Price
-                OutlinedTextField(
+                SimpleTextField(
                     value = price,
                     onValueChange = { price = it },
-                    label = { Text("Price") },
-                    leadingIcon = {
-                        Icon(painter = painterResource(R.drawable.price), contentDescription = "price")
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = EmeraldGreen,
-                        unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = EmeraldGreen
-                    )
+                    label = "Product Price",
+                    iconRes = R.drawable.price
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                // Phone
-                OutlinedTextField(
+                SimpleTextField(
                     value = phone,
                     onValueChange = { phone = it },
-                    label = { Text("Phone Number") },
-                    leadingIcon = {
-                        Icon(painter = painterResource(R.drawable.phone), contentDescription = "phone")
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = EmeraldGreen,
-                        unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = EmeraldGreen
-                    )
+                    label = "Phone Number",
+                    iconRes = R.drawable.phone
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                // Image Picker
+                // Simple Image Picker
                 Box(
                     modifier = Modifier
                         .size(200.dp)
-                        .background(Color(0xFFEAEAEA), shape = RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.White)
+                        .border(
+                            width = 1.dp,
+                            color = EmeraldGreen.copy(alpha = 0.4f),
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp))
                         .clickable { imagePicker.launch("image/*") },
                     contentAlignment = Alignment.Center
                 ) {
@@ -172,45 +163,54 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
                             Icon(
                                 painter = painterResource(R.drawable.image),
                                 contentDescription = "Pick Image",
-                                tint = EmeraldGreen
+                                tint = EmeraldGreen.copy(alpha = 0.8f),
+                                modifier = Modifier.size(50.dp)
                             )
-                            Text("Tap to pick image", color = EmeraldGreen)
+                            Text("Tap to pick image", color = EmeraldGreen, fontWeight = FontWeight.Medium)
                         }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Submit
                 Button(
                     onClick = {
                         val priceValue = price.toDoubleOrNull()
-                        if (name.isBlank() || phone.isBlank() || priceValue == null || imageUri == null) {
-                            Log.e("AddProduct", "Invalid input")
-                            return@Button
+                        if (priceValue != null) {
+                            imageUri?.toString()?.let { viewModel.addProduct(name, priceValue, phone, it) }
+                            navController.popBackStack()
                         }
-
-                        viewModel.addProduct(
-                            name = name,
-                            price = priceValue,
-                            phone = phone,
-                            imageUri = imageUri.toString()
-                        )
-                        navController.popBackStack()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = EmeraldGreen,
-                        contentColor = Color.White
-                    )
+                        .height(55.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen)
                 ) {
-                    Text("Add Product", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Add Product", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
                 }
             }
         }
+    )
+}
+
+@Composable
+fun SimpleTextField(value: String, onValueChange: (String) -> Unit, label: String, iconRes: Int) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label, color = EmeraldGreen) },
+        leadingIcon = { Icon(painter = painterResource(iconRes), contentDescription = label, tint = EmeraldGreen) },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = EmeraldGreen,
+            unfocusedBorderColor = EmeraldGreen.copy(alpha = 0.4f),
+            focusedLabelColor = EmeraldGreen,
+            unfocusedLabelColor = EmeraldGreen
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White, shape = RoundedCornerShape(12.dp))
+            .shadow(elevation = 3.dp, shape = RoundedCornerShape(12.dp))
     )
 }
 
@@ -223,14 +223,14 @@ fun BottomNavigationBar(navController: NavController) {
         NavigationBarItem(
             selected = false,
             onClick = { navController.navigate(ROUT_PRODUCT_LIST) },
-            icon = { Icon(Icons.Default.Home, contentDescription = "Product List") },
-            label = { Text("Home") }
+            icon = { Icon(Icons.Default.Home, contentDescription = "Product List", tint = Color.White) },
+            label = { Text("Home", color = Color.White) }
         )
         NavigationBarItem(
             selected = false,
             onClick = { navController.navigate(ROUT_ADD_PRODUCT) },
-            icon = { Icon(Icons.Default.AddCircle, contentDescription = "Add Product") },
-            label = { Text("Add") }
+            icon = { Icon(Icons.Default.AddCircle, contentDescription = "Add Product", tint = Color.White) },
+            label = { Text("Add", color = Color.White) }
         )
     }
 }

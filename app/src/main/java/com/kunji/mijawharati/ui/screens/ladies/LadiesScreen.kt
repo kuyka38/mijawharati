@@ -3,51 +3,24 @@ package com.kunji.mijawharati.ui.screens.ladies
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -58,786 +31,189 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
-import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
-import com.kunji.mijawharati.ui.theme.mustard
 
-@OptIn(ExperimentalMaterial3Api::class)
+data class LadiesProduct(
+    val id: Int,
+    val name: String,
+    val brand: String,
+    val price: String,
+    val rating: Double,
+    val imageRes: Int
+)
+
 @Composable
 fun LadiesScreen(navController: NavController) {
-
     val mContext = LocalContext.current
+    val searchQuery = remember { mutableStateOf("") }
+    var selectedBottomItem by remember { mutableStateOf(0) }
 
-    var selectedIndex by remember { mutableStateOf(0) }
+    val ladiesProducts = listOf(
+        LadiesProduct(1, "Emerald Necklace", "Luxury Gems", "KES 600", 4.8, R.drawable.brace1),
+        LadiesProduct(2, "Diamond Earrings", "Shiny Stones", "KES 500", 4.6, R.drawable.img_3),
+        LadiesProduct(3, "Gold Bracelet", "Golden Touch", "KES 1,000", 4.9, R.drawable.brace4),
+        LadiesProduct(4, "Pearl Ring", "Ocean Pearls", "KES 1,000", 4.7, R.drawable.rings1),
+        LadiesProduct(5, "Rose Gold Watch", "Time Luxe", "KES 2,000", 4.8, R.drawable.watch4),
+        LadiesProduct(6, "Choker Set", "Glam Jewellery", "KES 1,800", 4.5, R.drawable.chain3)
+    )
 
     Scaffold(
-        topBar = @androidx.compose.runtime.Composable {
-            TopAppBar(
-                title = { Text("Women's Collection") },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigate("ROUT_CATEGORY")
-                    }) {
-                        Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {
-                        navController.navigate("CartScreen")
-                    }) {
-                        Icon(Icons.Default.ShoppingCart, contentDescription = "Cart", tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = EmeraldGreen,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
-                )
-            )
-        },
-
-
-                bottomBar = {
-            NavigationBar(containerColor = EmeraldGreen) {
+        bottomBar = {
+            NavigationBar(containerColor = Color.White) {
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                    label = { Text("Home") },
-                    selected = selectedIndex == 0,
-                    onClick = { selectedIndex = 0 }
+                    selected = selectedBottomItem == 0,
+                    onClick = { selectedBottomItem = 0  },
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+                    label = { Text("Home") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
-                    label = { Text("Favorites") },
-                    selected = selectedIndex == 1,
-                    onClick = { selectedIndex = 1 }
+                    selected = selectedBottomItem == 1,
+                    onClick = { selectedBottomItem = 1 /* Navigate favorites */ },
+                    icon = { Icon(Icons.Filled.Favorite, contentDescription = "Favorites") },
+                    label = { Text("Favorites") }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-                    label = { Text("Profile") },
-                    selected = selectedIndex == 2,
-                    onClick = { selectedIndex = 2 }
+                    selected = selectedBottomItem == 2,
+                    onClick = { selectedBottomItem = 2 /* Navigate profile */ },
+                    icon = { Icon(Icons.Filled.Person, contentDescription = "Profile") },
+                    label = { Text("Profile") }
                 )
-            }
-        },
-
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    Toast.makeText(mContext, "FAB clicked", Toast.LENGTH_SHORT).show()
-                },
-                containerColor = Color.LightGray
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
-        },
-        content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .background(CreamWhite)
-                    .verticalScroll(rememberScrollState())
-                    .fillMaxSize()
-            ) {
-                Text(
-                    text = "Celebrate your sparkle with MiJawharati’s Women’s Collection elegant pieces crafted to elevate every moment.",
-                    fontSize = 15.sp,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Image(
-                    painter = painterResource(R.drawable.img_1),
-                    contentDescription = "coat",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(width = 50.dp, height = 150.dp)
-                        .padding(horizontal = 16.dp),
-                    contentScale = ContentScale.FillWidth
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                var search by remember { mutableStateOf("") }
-                OutlinedTextField(
-                    value = search,
-                    onValueChange = { search = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "search"
-                        )
-                    },
-                    placeholder = { Text(text = "Search products") },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = EmeraldGreen,
-                        focusedBorderColor = Color.Gray
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(
-                    text = "Our Products",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 20.dp)
-
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-                //BEGINING OF ROW-1
-
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.brace2),
-                        contentDescription = "cloth",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 150.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Diamond Plated Clover Lucky Bracelet",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(text = "Brand: AIPPK", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "price: ksh 1000", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material: Stainless Steel", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 15.dp, end = 15.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //GEGINING OF ROW-2
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.brace1),
-                        contentDescription = "cloth",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 150.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Gold-Plated Four Leaf Clover Bracelet",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Brand:AIPPK", fontSize = 15.sp)
-
-                        Text(text = "Price: ksh 1000", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material: Stainless Steal", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-
-                //BEGINING OF ROW-3
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.earing1),
-                        contentDescription = "earing",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 150.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Gold Plated Sterling Silver Posts Oval Chunky Hoop Earring",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Brand:PAVOI jewellery", fontSize = 15.sp)
-
-                        Text(text = "Price: ksh 2000", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material: Yellow Gold", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //BEGINING OF ROW-5
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.chain2),
-                        contentDescription = "chain",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 150.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Layered Gold Necklaces for Women",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Brand:Picuzzy", fontSize = 15.sp)
-
-                        Text(text = "Price: ksh 1000", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material:Gold Plated", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //BEGINING OF ROW-6
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.chain3),
-                        contentDescription = "chain",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 150.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Otxas Layered Gold Necklace for Women",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Brand:OUO-US", fontSize = 15.sp)
-
-                        Text(text = "Price: ksh 1300", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material:Zinc", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //BEGINING OF ROW-7
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.rings1),
-                        contentDescription = "chain",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 150.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Chunky Gold Rings for Women Stackable Silver Rings Set",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Brand:VRNGI", fontSize = 15.sp)
-
-                        Text(text = "Price: ksh 2500", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material:Alloy Steel", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //BEGINING OF ROW-8
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.rings2),
-                        contentDescription = "chain",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 150.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Fansilver Stackable Chunky Gold Rings for Women ",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Brand:Fansilver Jewellery", fontSize = 15.sp)
-
-                        Text(text = "Price: ksh 1900", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material:Alloy Gold", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //BEGINING OF ROW-9
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.watch3),
-                        contentDescription = "watch",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 150.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Lola Rose Dainty Women's Wrist Watch ",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Brand:Lola Rose", fontSize = 15.sp)
-
-                        Text(text = "Price: ksh 3000", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material: Alloy Gold", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //BEGINING OF ROW-10
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.watch4),
-                        contentDescription = "watch",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 200.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "CARLIEN Women Vintage Petite Bracelet Gold Dainty Watch",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Brand:CARLIEN", fontSize = 15.sp)
-
-                        Text(text = "Price: ksh 4000", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material:Gold", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //BEGINING OF ROW-10
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.anklet1),
-                        contentDescription = "anklet",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 200.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Gold Ankle Bracelets for women",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Brand:MFYRK", fontSize = 15.sp)
-
-                        Text(text = "Price: ksh 1200", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material: Brass ", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                //BEGINING OF ROW-10
-                Row(modifier = Modifier.padding(start = 20.dp)) {
-                    Image(
-                        painter = painterResource(R.drawable.anklet2),
-                        contentDescription = "anklet",
-                        modifier = Modifier
-                            .size(width = 150.dp, height = 200.dp)
-                            .clip(shape = RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = "Silver Plated Ankle Bracelets Trendy Waterproof Boho Anklets",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Brand: Rontso ", fontSize = 15.sp)
-
-                        Text(text = "Price: ksh 1000", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Material: Brass ", fontSize = 15.sp)
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Row {
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = mustard)
-                            Icon(Icons.Default.Star, contentDescription = "", tint = Color.Black)
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                if (simToolKitLaunchIntent != null) {
-                                    mContext.startActivity(simToolKitLaunchIntent)
-                                } else {
-                                    Toast.makeText(mContext, "STK app not found", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(EmeraldGreen),
-                            shape = RectangleShape,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp)
-                        ) {
-                            Text(text = "Buy Now")
-                        }
-                    }
-                }
-                //END OF ROW
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             }
         }
-    )
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF5F5F5))
+                .verticalScroll(rememberScrollState()) // Makes the whole screen scrollable
+                .padding(paddingValues)
+        ) {
+            // Top bar
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(EmeraldGreen)
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Ladies Collection",
+                    color = Color.White,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+                IconButton(onClick = { /* Navigate to cart */ }) {
+                    Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart", tint = Color.White)
+                }
+            }
+
+            // Banner Image
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.img_8), // Replace with your image
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                Text(
+                    text = "Embrace the elegance of the MiJawharati Women’s Collection — a celebration of beauty, grace, and timeless charm. From delicate necklaces to dazzling earrings, each piece is designed to inspire and empower.",
+                    color = Color.White,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter) // position in center of image
+                        .padding(8.dp)
+                )
+            }
+
+            // Search bar
+            OutlinedTextField(
+                value = searchQuery.value,
+                onValueChange = { searchQuery.value = it },
+                placeholder = { Text("Search jewellery...", fontSize = 14.sp) },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = EmeraldGreen,
+                    unfocusedBorderColor = Color.Gray
+                )
+            )
+
+            // Products Grid (inside scrollable column)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(8.dp),
+                modifier = Modifier.heightIn(max = 1000.dp) // ensure grid fits scroll
+            ) {
+                items(ladiesProducts) { product ->
+                    Card(
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable { /* Navigate to details */ },
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(8.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = product.imageRes),
+                                contentDescription = product.name,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .height(120.dp)
+                                    .fillMaxWidth()
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(product.name, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            Text(product.brand, fontSize = 12.sp, color = Color.Gray)
+                            Text(product.price, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = EmeraldGreen)
+                            Text("⭐ ${product.rating}", fontSize = 12.sp, color = Color.Gray)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Button(
+                                onClick = {
+                                    Toast.makeText(
+                                        mContext,
+                                        "${product.name} added to cart",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Add to Cart", color = Color.White, fontSize = 12.sp)
+                            }
+                            Button(
+                                onClick = {
+                                    val simToolKitLaunchIntent =
+                                        mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
+                                    simToolKitLaunchIntent?.let { mContext.startActivity(it) }
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Buy Now", color = Color.White, fontSize = 12.sp)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun    LadiesScreenPreview() {
+fun LadiesScreenPreview() {
     LadiesScreen(navController = rememberNavController())
 }

@@ -1,4 +1,4 @@
-package com.kunji.swaggy.viewmodel
+package com.kunji.mijawharati.viewmodel
 
 import android.app.Application
 import android.net.Uri

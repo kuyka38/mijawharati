@@ -1,5 +1,6 @@
 package com.kunji.mijawharati.ui.screens.category
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +32,8 @@ import com.kunji.mijawharati.ui.theme.EmeraldGreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryScreen(navController: NavController) {
+
+    val mContext = LocalContext.current
     var selectedIndex by remember { mutableStateOf(0) }
     var showMenu by remember { mutableStateOf(false) }
 
@@ -117,7 +121,14 @@ fun CategoryScreen(navController: NavController) {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO */ }) {
+                            IconButton(onClick = {
+
+                                val shareIntent= Intent(Intent.ACTION_SEND)
+                                shareIntent.type="text/plain"
+                                shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this is a cool content")
+                                mContext.startActivity(Intent.createChooser(shareIntent, "Share"))
+
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "share", tint = CreamWhite)
                             }
                             IconButton(onClick = { /* TODO */ }) {
@@ -171,7 +182,7 @@ fun CategoryScreen(navController: NavController) {
                     ) {
                         Box(modifier = Modifier.fillMaxSize()) {
                             Image(
-                                painter = painterResource(id = R.drawable.woman),
+                                painter = painterResource(id = R.drawable.img_8),
                                 contentDescription = "Womens' Collection",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
@@ -189,7 +200,7 @@ fun CategoryScreen(navController: NavController) {
                                 fontSize = 26.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 fontFamily = FontFamily.Serif,
-                                color = CreamWhite,
+                                color = Color.LightGray,
                                 modifier = Modifier
                                     .align(Alignment.BottomStart)
                                     .padding(4.dp)
@@ -212,7 +223,7 @@ fun CategoryScreen(navController: NavController) {
                     ) {
                         Box(modifier = Modifier.fillMaxSize()) {
                             Image(
-                                painter = painterResource(id = R.drawable.man),
+                                painter = painterResource(id = R.drawable.img_11),
                                 contentDescription = "Men's Collection",
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
@@ -230,7 +241,7 @@ fun CategoryScreen(navController: NavController) {
                                 fontSize = 28.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 fontFamily = FontFamily.Serif,
-                                color = CreamWhite,
+                                color = Color.LightGray,
                                 modifier = Modifier
                                     .align(Alignment.BottomStart)
                                     .padding(4.dp)
