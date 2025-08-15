@@ -1,4 +1,4 @@
-package com.kunji.mijawharati.ui.screens.Home
+package com.kunji.mijawharati.ui.screens.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -19,26 +20,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
-import com.kunji.mijawharati.navigation.ROUT_CATEGORY
-import com.kunji.mijawharati.navigation.ROUT_LANDING
-import com.kunji.mijawharati.navigation.ROUT_LOGIN
-import com.kunji.mijawharati.ui.theme.*
+import com.kunji.mijawharati.navigation.ROUT_HOME
+import com.kunji.mijawharati.ui.theme.CreamWhite
+import com.kunji.mijawharati.ui.theme.EmeraldGreen
 
 @Composable
-fun HomeScreen(navcontoller: NavController) {
+fun OnboardingScreen(navController: NavController) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img_16),
+            painter = painterResource(id = R.drawable.img_17),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
         )
 
         Column(
@@ -48,49 +43,37 @@ fun HomeScreen(navcontoller: NavController) {
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Paragraph text
             Text(
-                text = "Start your story in style",
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold,
-                color = EmeraldGreen,
-                textAlign = TextAlign.Center,
-                fontFamily = FontFamily.Serif
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                text = "Discover beauty redefined through timeless jewellery — start your journey in style and explore your collection today.",
+                text = "From bold statement designs to subtle everyday elegance, discover unique pieces crafted for everyone. Explore our men’s and women’s collections to find the perfect jewellery that reflects your style and story..",
                 fontSize = 16.sp,
                 fontFamily = FontFamily.Serif,
                 color = CreamWhite,
                 textAlign = TextAlign.Center,
-
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
-
-            Button(
-                onClick = {
-                    navcontoller.navigate(ROUT_LANDING)
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                modifier = Modifier.fillMaxWidth()
+            // Row to align button bottom-right
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
             ) {
-                Text("Get Started", color = CreamWhite)
+                Button(
+                    onClick = { navController.navigate(ROUT_HOME) },
+                    colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .height(40.dp)
+                ) {
+                    Text("Next", color = CreamWhite, fontSize = 14.sp)
+                }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreenPreview(){
-    HomeScreen(navcontoller = rememberNavController())
+fun OnboardingScreenPreview() {
+    OnboardingScreen(navController = rememberNavController())
 }
-
-

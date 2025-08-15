@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.navigation.ROUT_HOME
+import com.kunji.mijawharati.navigation.ROUT_PICTURE
 import com.kunji.mijawharati.navigation.ROUT_REGISTER
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 import com.kunji.mijawharati.viewmodel.AuthViewModel
@@ -49,7 +50,7 @@ fun LoginScreen(
             if (user == null) {
                 Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
             } else {
-                navController.navigate(ROUT_HOME)
+                navController.navigate(ROUT_PICTURE)
             }
         }
     }

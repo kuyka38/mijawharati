@@ -1,4 +1,4 @@
-package com.kunji.mijawharati.ui.screens.Home
+package com.kunji.mijawharati.ui.screens.picture
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -19,26 +19,21 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
-import com.kunji.mijawharati.navigation.ROUT_CATEGORY
-import com.kunji.mijawharati.navigation.ROUT_LANDING
-import com.kunji.mijawharati.navigation.ROUT_LOGIN
-import com.kunji.mijawharati.ui.theme.*
+import com.kunji.mijawharati.navigation.ROUT_HOME
+import com.kunji.mijawharati.navigation.ROUT_ONBOARDING
+import com.kunji.mijawharati.ui.theme.CreamWhite
+import com.kunji.mijawharati.ui.theme.EmeraldGreen
 
 @Composable
-fun HomeScreen(navcontoller: NavController) {
+fun PictureScreen(navController: NavController) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img_16),
+            painter = painterResource(id = R.drawable.img_7),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
         )
 
         Column(
@@ -48,49 +43,49 @@ fun HomeScreen(navcontoller: NavController) {
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             Text(
-                text = "Start your story in style",
-                fontSize = 25.sp,
+                text = "WELCOME TO MIJAWHARATI",
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = EmeraldGreen,
                 textAlign = TextAlign.Center,
                 fontFamily = FontFamily.Serif
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
+            // Paragraph text
             Text(
-                text = "Discover beauty redefined through timeless jewellery — start your journey in style and explore your collection today.",
+                text = "A celebration of beauty, culture, and self-expression through timeless jewellery — embrace elegance crafted for every occasion..",
                 fontSize = 16.sp,
                 fontFamily = FontFamily.Serif,
                 color = CreamWhite,
                 textAlign = TextAlign.Center,
-
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
-
-            Button(
-                onClick = {
-                    navcontoller.navigate(ROUT_LANDING)
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                modifier = Modifier.fillMaxWidth()
+            // Row to align button bottom-right
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
             ) {
-                Text("Get Started", color = CreamWhite)
+                Button(
+                    onClick = { navController.navigate(ROUT_ONBOARDING) },
+                    colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .height(40.dp)
+                ) {
+                    Text("Next", color = CreamWhite, fontSize = 14.sp)
+                }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreenPreview(){
-    HomeScreen(navcontoller = rememberNavController())
+fun PictureScreenPreview() {
+    PictureScreen(navController = rememberNavController())
 }
-
-

@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.model.User
 import com.kunji.mijawharati.navigation.ROUT_LOGIN
+import com.kunji.mijawharati.navigation.ROUT_ADMINDASHBOARD
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 import com.kunji.mijawharati.viewmodel.AuthViewModel
 
@@ -98,10 +99,6 @@ fun RegisterScreen(
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
-
-
-
-
 
                 // Username
                 OutlinedTextField(
@@ -234,7 +231,13 @@ fun RegisterScreen(
                             authViewModel.registerUser(
                                 User(username = username, email = email, role = role, password = password)
                             )
-                            onRegisterSuccess()
+
+                            // Navigate based on role
+                            if (role == "Seller") {
+                                navController.navigate(ROUT_ADMINDASHBOARD)
+                            } else {
+                                onRegisterSuccess()
+                            }
                         }
                     },
                     modifier = Modifier

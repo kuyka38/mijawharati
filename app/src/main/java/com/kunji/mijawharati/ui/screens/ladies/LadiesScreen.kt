@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
@@ -33,6 +34,9 @@ import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 
+// Route constant for cart
+const val ROUT_CART = "CartScreen"
+
 data class LadiesProduct(
     val id: Int,
     val name: String,
@@ -48,6 +52,9 @@ fun LadiesScreen(navController: NavController) {
     val searchQuery = remember { mutableStateOf("") }
     var selectedBottomItem by remember { mutableStateOf(0) }
 
+    // Track cart count
+    var cartCount by remember { mutableStateOf(0) }
+
     val ladiesProducts = listOf(
         LadiesProduct(1, "Emerald Necklace", "Luxury Gems", "KES 600", 4.8, R.drawable.brace1),
         LadiesProduct(2, "Diamond Earrings", "Shiny Stones", "KES 500", 4.6, R.drawable.img_3),
@@ -62,7 +69,7 @@ fun LadiesScreen(navController: NavController) {
             NavigationBar(containerColor = Color.White) {
                 NavigationBarItem(
                     selected = selectedBottomItem == 0,
-                    onClick = { selectedBottomItem = 0  },
+                    onClick = { selectedBottomItem = 0 },
                     icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
                     label = { Text("Home") }
                 )
@@ -85,7 +92,7 @@ fun LadiesScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFF5F5F5))
-                .verticalScroll(rememberScrollState()) // Makes the whole screen scrollable
+                .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
         ) {
             // Top bar
@@ -96,6 +103,18 @@ fun LadiesScreen(navController: NavController) {
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                IconButton(onClick = {
+                    navController.navigate("CategoryScreen") {
+                        popUpTo("CategoryScreen") { inclusive = true }
+                    }
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowLeft,
+                        contentDescription = "Back to category",
+                        tint = Color.White
+                    )
+                }
+
                 Text(
                     text = "Ladies Collection",
                     color = Color.White,
@@ -103,8 +122,22 @@ fun LadiesScreen(navController: NavController) {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
-                IconButton(onClick = { /* Navigate to cart */ }) {
-                    Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart", tint = Color.White)
+
+                // Cart icon with badge
+                BadgedBox(
+                    badge = {
+                        if (cartCount > 0) {
+                            Badge { Text(cartCount.toString()) }
+                        }
+                    }
+                ) {
+                    IconButton(onClick = { navController.navigate(ROUT_CART) }) {
+                        Icon(
+                            Icons.Filled.ShoppingCart,
+                            contentDescription = "Cart",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
 
@@ -115,7 +148,7 @@ fun LadiesScreen(navController: NavController) {
                     .height(300.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.img_8), // Replace with your image
+                    painter = painterResource(id = R.drawable.img_8),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -127,7 +160,7 @@ fun LadiesScreen(navController: NavController) {
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
-                        .align(Alignment.BottomCenter) // position in center of image
+                        .align(Alignment.BottomCenter)
                         .padding(8.dp)
                 )
             }
@@ -147,11 +180,11 @@ fun LadiesScreen(navController: NavController) {
                 )
             )
 
-            // Products Grid (inside scrollable column)
+            // Products Grid
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(8.dp),
-                modifier = Modifier.heightIn(max = 1000.dp) // ensure grid fits scroll
+                modifier = Modifier.heightIn(max = 1000.dp)
             ) {
                 items(ladiesProducts) { product ->
                     Card(
@@ -182,6 +215,7 @@ fun LadiesScreen(navController: NavController) {
                             Spacer(modifier = Modifier.height(4.dp))
                             Button(
                                 onClick = {
+                                    cartCount++
                                     Toast.makeText(
                                         mContext,
                                         "${product.name} added to cart",

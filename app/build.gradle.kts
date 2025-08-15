@@ -78,5 +78,11 @@ dependencies {
     //Livedata
     implementation("androidx.compose.runtime:runtime-livedata:1.6.7")
 
+    implementation("com.google.accompanist:accompanist-pager:0.30.1")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
+
+
+    implementation("androidx.compose.foundation:foundation:1.5.0") // or latest
+
 
 }

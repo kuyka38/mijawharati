@@ -1,253 +1,398 @@
 package com.kunji.mijawharati.ui.screens.landing
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
+import com.kunji.mijawharati.navigation.ROUT_CART
+import com.kunji.mijawharati.navigation.ROUT_SETTINGS
+import com.kunji.mijawharati.ui.theme.CreamWhite
+import com.kunji.mijawharati.ui.theme.EmeraldGreen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-val EmeraldGreen = com.kunji.mijawharati.ui.theme.EmeraldGreen
-val CreamWhite = com.kunji.mijawharati.ui.theme.CreamWhite
+// Data class for grid products
+data class Product(
+    val name: String,
+    val imageRes: Int
+)
+
+@Composable
+fun ProductGrid() {
+    val context = LocalContext.current
+
+    val products = listOf(
+        Product("Necklaces", R.drawable.img_19),
+        Product("Bracelets", R.drawable.img_18),
+        Product("Rings", R.drawable.img_20),
+        Product("Earings", R.drawable.img_21),
+        Product("Watches", R.drawable.img_22),
+        Product("Anklets", R.drawable.img_23)
+    )
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp) // constrain height since inside verticalScroll
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        items(products) { product ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable {
+                        Toast.makeText(context, "${product.name} clicked", Toast.LENGTH_SHORT).show()
+                    }
+                    .padding(8.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = product.imageRes),
+                    contentDescription = product.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(90.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = product.name,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LandingScreen(navController: NavController) {
-    Scaffold(
-        containerColor = CreamWhite,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text("Welcome to MiJawharati")
-                },
-                navigationIcon = {
-                    IconButton(onClick = { /* TODO: Menu */ }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
 
-                    }
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = EmeraldGreen,
-                    titleContentColor = CreamWhite,
-                    navigationIconContentColor = CreamWhite
-                )
-            )
-        },
-        bottomBar = {
-            BottomAppBar(containerColor = EmeraldGreen) {
-                Row(
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier.width(280.dp),
+                drawerContainerColor = Color.White
+            ) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 6.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                        .fillMaxHeight()
+                        .padding(16.dp)
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(Icons.Default.Home, contentDescription = "Home", tint = CreamWhite)
-                        Text("Home", color = CreamWhite, fontSize = 12.sp)
-                    }
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(Icons.Default.Person, contentDescription = "Favorite", tint = CreamWhite)
-                        Text("profile", color = CreamWhite, fontSize = 12.sp)
-                    }
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(Icons.Default.Favorite, contentDescription = "Favorite", tint = CreamWhite)
-                        Text("favorite", color = CreamWhite, fontSize = 12.sp)
-                    }
+                    Text(
+                        text = "MIJAWHARATI",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 35.sp,
+                        color = EmeraldGreen,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
 
+                    Text(
+                        text = "Contact us",
+                        fontSize = 18.sp,
+                        color = EmeraldGreen,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier
+                            .padding(vertical = 12.dp)
+                            .clickable {
+                                scope.launch { drawerState.close() }
+                                navController.navigate("ContactsScreen")
+                            }
+                    )
 
+                    Text(
+                        text = "About us",
+                        fontSize = 18.sp,
+                        color = EmeraldGreen,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier
+                            .padding(vertical = 12.dp)
+                            .clickable {
+                                scope.launch { drawerState.close() }
+                                navController.navigate("AboutScreen")
+                            }
+                    )
 
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = "Settings",
+                        fontSize = 18.sp,
+                        color = EmeraldGreen,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier
+                            .padding(vertical = 12.dp)
+                            .clickable {
+                                scope.launch { drawerState.close() }
+                                navController.navigate(ROUT_SETTINGS)
+                            }
+                    )
+
+                    Spacer(modifier = Modifier.height(45.dp))
+
+                    Text(
+                        text = "What we offer",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        color = EmeraldGreen
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("• Delivery within 5 days", fontSize = 15.sp, color = Color.Gray)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text("• Free standard delivery", fontSize = 15.sp, color = Color.Gray)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text("• Free Returns", fontSize = 15.sp, color = Color.Gray)
+
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .background(CreamWhite)
-        ) {
-            // Banner Image
-            Image(
-                painter = painterResource(id = R.drawable.img_6),
-                contentDescription = "Banner",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(12.dp))
-            )
-
-            Spacer(modifier = Modifier.height(10.dp) )
-
-            // Discover Title
-            Text(
-                text = "Shop Our unique pieces",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
-            )
-
-            // Circle icons
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.chain1),
-                    contentDescription = "Necklace",
-                    modifier = Modifier
-                        .size(70.dp)
-                        .clip(CircleShape)
+    ) {
+        Scaffold(
+            containerColor = CreamWhite,
+            topBar = {
+                TopAppBar(
+                    title = { Text("Welcome to MiJawharati") },
+                    navigationIcon = {
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = EmeraldGreen,
+                        titleContentColor = CreamWhite,
+                        navigationIconContentColor = CreamWhite
+                    )
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.brace4),
-                    contentDescription = "Earrings",
-                    modifier = Modifier
-                        .size(70.dp)
-                        .clip(CircleShape)
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.menchain1),
-                    contentDescription = "Chain Pendant",
-                    modifier = Modifier
-                        .size(70.dp)
-                        .clip(CircleShape)
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.brace1),
-                    contentDescription = "Bangles",
-                    modifier = Modifier
-                        .size(70.dp)
-                        .clip(CircleShape)
-                )
+            },
+            bottomBar = {
+                BottomAppBar(containerColor = EmeraldGreen) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(Icons.Default.Home, contentDescription = "Home", tint = CreamWhite)
+                            Text("Home", color = CreamWhite, fontSize = 12.sp)
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.clickable {
+                                navController.navigate(ROUT_CART)
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.ShoppingCart,
+                                contentDescription = "Cart",
+                                tint = CreamWhite
+                            )
+                            Text("Cart", color = CreamWhite, fontSize = 12.sp)
+                        }
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(Icons.Default.Person, contentDescription = "Profile", tint = CreamWhite)
+                            Text("Profile", color = CreamWhite, fontSize = 12.sp)
+                        }
+                    }
+                }
             }
-
-            Spacer(modifier = Modifier.height(10.dp) )
-
-            // Section Title
-            Text(
-                text = "Our Upcoming Korean Collection",
-                style = MaterialTheme.typography.titleMedium,
-
-                modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp)
-            )
-
-            // Horizontally scrollable product images
-            Row(
+        ) { padding ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(padding)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .background(CreamWhite)
             ) {
+                // Carousel logic
+                val carouselImages = listOf(R.drawable.img_6, R.drawable.img_6, R.drawable.img_6)
+                var currentImageIndex by remember { mutableStateOf(0) }
+
+                LaunchedEffect(Unit) {
+                    while (true) {
+                        delay(1000)
+                        currentImageIndex = (currentImageIndex + 1) % carouselImages.size
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Image(
-                    painter = painterResource(id = R.drawable.img_3),
-                    contentDescription = "Korean Necklace",
+                    painter = painterResource(id = R.drawable.img_6),
+                    contentDescription = "Banner",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .width(280.dp)
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(10.dp))
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .padding(16.dp)
+                        .clip(RoundedCornerShape(12.dp))
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.img_4),
-                    contentDescription = "Korean Earring",
-                    contentScale = ContentScale.Crop,
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text(
+                    text = "Shop Our Categories",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+                )
+
+                // Insert Grid here
+                ProductGrid()
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "Upcoming Korean Collection",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp)
+                )
+
+                Row(
                     modifier = Modifier
-                        .width(280.dp)
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(10.dp))
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.img_3),
+                        contentDescription = "Korean Necklace",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .width(280.dp)
+                            .height(180.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.img_4),
+                        contentDescription = "Korean Earring",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .width(280.dp)
+                            .height(180.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.img_2),
+                        contentDescription = "Korean Pendant",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .width(280.dp)
+                            .height(180.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Text(
+                    text = "Delicate, timeless, and effortlessly chic — our upcoming Korean Collection is your next jewellery obsession.",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp)
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.img_2),
-                    contentDescription = "Korean Pendant",
-                    contentScale = ContentScale.Crop,
+
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Box(
                     modifier = Modifier
-                        .width(280.dp)
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(10.dp))
+                        .fillMaxWidth()
+                        .height(350.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.img_5),
+                        contentDescription = "Centered Image",
+                        modifier = Modifier.size(650.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text(
+                    text = "Shop our exclusive Men's and Women's collections, where elegance meets craftsmanship. Discover timeless pieces designed to complement every style.",
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Center
                 )
+
+                Button(
+                    onClick = { navController.navigate("CategoryScreen") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = EmeraldGreen,
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text("Shop Now")
+                }
             }
-
-            Spacer(modifier = Modifier.height(5.dp) )
-
-            Text(
-                text = "Delicate, timeless, and effortlessly chic — our upcoming Korean Collection is your next jewellery obsession.",
-                style = MaterialTheme.typography.titleMedium,
-
-                modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp)
-            )
-
-
-            Spacer(modifier = Modifier.height(15.dp) )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(350.dp), // Set your desired height
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.img_5),
-                    contentDescription = "Centered Image",
-                    modifier = Modifier.size(450.dp) // Adjust size as needed
-                )
-            }
-
-            Spacer(modifier = Modifier.height(10.dp) )
-
-
-            Text(
-                text = "Shop our exclusive Men's and Women's collections, where elegance meets craftsmanship. Discover timeless pieces designed to complement every style.",
-                fontSize = 15.sp,
-                textAlign = TextAlign.Center)
-
-
-
-            Button(
-                onClick = {
-                    navController.navigate("CategoryScreen")
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = EmeraldGreen,
-                    contentColor = Color.White
-                ),
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Text("Shop Now")
-            }
-
         }
     }
 }

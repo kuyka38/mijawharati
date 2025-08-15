@@ -1,4 +1,4 @@
-package com.kunji.mijawharati.ui.screens.ladies
+package com.kunji.mijawharati.ui.screens.men
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
@@ -33,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 
+// Data class for products
 data class MenProduct(
     val id: Int,
     val name: String,
@@ -48,18 +50,17 @@ fun MenScreen(navController: NavController) {
     val searchQuery = remember { mutableStateOf("") }
     var selectedBottomItem by remember { mutableStateOf(0) }
 
+    // Cart state
+    var cartCount by remember { mutableStateOf(0) }
 
-    val ladiesProducts = listOf(
-        LadiesProduct(1, "Men's Silver Bracelet Set", "Luxury sets", "KES 1,000", 4.8, R.drawable.menbrace1),
-        LadiesProduct(2, "Mens Hoop Earrings", "Jewel Stones", "KES 1,500", 4.6, R.drawable.menear2),
-        LadiesProduct(3, "Cuban Link Chains", "Golden Touch", "KES 2,000", 4.9, R.drawable.menchain1),
-        LadiesProduct(4, "Timex Waterbury Watch", "Timex Watches", "KES 6,000", 4.7, R.drawable.menwatch2),
-        LadiesProduct(5, "Men’s Legacy Watch", "MVMT Watches", "KES 5,000", 4.8, R.drawable.menwatch1),
-        LadiesProduct(6, "Cufflinks Box", "Cuff Daddy", "KES 800", 4.5, R.drawable.mencuff1)
+    val menProducts = listOf(
+        MenProduct(1, "Men's Silver Bracelet Set", "Luxury sets", "KES 1,000", 4.8, R.drawable.menbrace1),
+        MenProduct(2, "Mens Hoop Earrings", "Jewel Stones", "KES 1,500", 4.6, R.drawable.menear2),
+        MenProduct(3, "Cuban Link Chains", "Golden Touch", "KES 2,000", 4.9, R.drawable.menchain1),
+        MenProduct(4, "Timex Waterbury Watch", "Timex Watches", "KES 6,000", 4.7, R.drawable.menwatch2),
+        MenProduct(5, "Men’s Legacy Watch", "MVMT Watches", "KES 5,000", 4.8, R.drawable.menwatch1),
+        MenProduct(6, "Cufflinks Box", "Cuff Daddy", "KES 800", 4.5, R.drawable.mencuff1)
     )
-
-
-
 
     Scaffold(
         bottomBar = {
@@ -89,7 +90,7 @@ fun MenScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFF5F5F5))
-                .verticalScroll(rememberScrollState()) // Makes the whole screen scrollable
+                .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
         ) {
             // Top bar
@@ -100,6 +101,18 @@ fun MenScreen(navController: NavController) {
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                IconButton(onClick = {
+                    navController.navigate("CategoryScreen") {
+                        popUpTo("CategoryScreen") { inclusive = true }
+                    }
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowLeft,
+                        contentDescription = "Back to category",
+                        tint = Color.White
+                    )
+                }
+
                 Text(
                     text = "Mens Collection",
                     color = Color.White,
@@ -107,8 +120,20 @@ fun MenScreen(navController: NavController) {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
-                IconButton(onClick = { /* Navigate to cart */ }) {
-                    Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart", tint = Color.White)
+
+                // Cart Icon with badge
+                BadgedBox(
+                    badge = {
+                        if (cartCount > 0) {
+                            Badge { Text(cartCount.toString()) }
+                        }
+                    }
+                ) {
+                    IconButton(onClick = {
+                        navController.navigate("ROUT_CART")
+                    }) {
+                        Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart", tint = Color.White)
+                    }
                 }
             }
 
@@ -119,7 +144,7 @@ fun MenScreen(navController: NavController) {
                     .height(300.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.img_15), // Replace with your image
+                    painter = painterResource(id = R.drawable.img_15),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -131,11 +156,10 @@ fun MenScreen(navController: NavController) {
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
-                        .align(Alignment.BottomCenter) // position in center of image
+                        .align(Alignment.BottomCenter)
                         .padding(8.dp)
                 )
             }
-
 
             // Search bar
             OutlinedTextField(
@@ -152,13 +176,13 @@ fun MenScreen(navController: NavController) {
                 )
             )
 
-            // Products Grid (inside scrollable column)
+            // Products Grid
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(8.dp),
-                modifier = Modifier.heightIn(max = 1000.dp) // ensure grid fits scroll
+                modifier = Modifier.heightIn(max = 1000.dp)
             ) {
-                items(ladiesProducts) { product ->
+                items(menProducts) { product ->
                     Card(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
@@ -192,6 +216,7 @@ fun MenScreen(navController: NavController) {
                                         "${product.name} added to cart",
                                         Toast.LENGTH_SHORT
                                     ).show()
+                                    cartCount++
                                 },
                                 colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
                                 modifier = Modifier.fillMaxWidth()

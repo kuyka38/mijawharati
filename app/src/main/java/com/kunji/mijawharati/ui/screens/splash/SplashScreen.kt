@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -56,25 +57,24 @@ fun SplashScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Subtitle
-            Text(
-                text = "Where elegance meets style",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Normal,
-                color = CreamWhite,
-                textAlign = TextAlign.Center,
-                fontFamily = FontFamily.Cursive
-            )
+
 
 
             Spacer(modifier = Modifier.height(60.dp) )
 
-            CircularProgressIndicator(
+            Box(
+                modifier = Modifier
+                    .size(40.dp), // control size of circle
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = CreamWhite,
+                    strokeWidth = 6.dp,  // makes it thicker
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
 
-                color = CreamWhite
 
-
-            )
         }
     }
 }

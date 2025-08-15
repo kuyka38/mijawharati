@@ -7,8 +7,14 @@ const val ROUT_MEN ="men"
 const val ROUT_SPLASH ="splash"
 const val ROUT_INTENT ="intent"
 const val ROUT_CONTACT ="contact"
-const val ROUT_LADIES ="contact"
-const val ROUT_LANDING ="contact"
+const val ROUT_LADIES ="ladies"
+const val ROUT_LANDING ="landing"
+const val ROUT_SETTINGS = "settings"
+const val ROUT_CART = "cart"
+const val ROUT_PICTURE = "picture"
+const val ROUT_ONBOARDING = "onboarding"
+const val ROUT_ADMINDASHBOARD = "admindashboard"
+
 
 
 //Auth

@@ -20,16 +20,23 @@ import com.kunji.mijawharati.ui.screens.auth.LoginScreen
 import com.kunji.mijawharati.ui.screens.category.CategoryScreen
 import com.kunji.mijawharati.ui.screens.contact.ContactsScreen
 import com.kunji.mijawharati.ui.screens.intent.IntentScreen
-import com.kunji.mijawharati.ui.screens.onboarding.HomeScreen
+import com.kunji.mijawharati.ui.screens.Home.HomeScreen
+import com.kunji.mijawharati.ui.screens.admin.AdminDashboardScreen
 import com.kunji.mijawharati.ui.screens.ladies.SplashScreen
 import com.kunji.mijawharati.ui.screens.ladies.LadiesScreen
 import com.kunji.mijawharati.viewmodel.AuthViewModel
 import com.kunji.mijawharati.ui.screens.auth.RegisterScreen
-import com.kunji.mijawharati.ui.screens.ladies.MenScreen
+import com.kunji.mijawharati.ui.screens.cart.CartScreen
+
 import com.kunji.mijawharati.ui.screens.landing.LandingScreen
+import com.kunji.mijawharati.ui.screens.men.MenScreen
+import com.kunji.mijawharati.ui.screens.onboarding.OnboardingScreen
+import com.kunji.mijawharati.ui.screens.picture.PictureScreen
 import com.kunji.mijawharati.ui.screens.products.AddProductScreen
 import com.kunji.mijawharati.ui.screens.products.EditProductScreen
 import com.kunji.mijawharati.ui.screens.products.ProductListScreen
+import com.kunji.mijawharati.ui.screens.settings.SettingsScreen
+
 
 import com.kunji.mijawharati.viewmodel.ProductViewModel
 
@@ -39,7 +46,7 @@ import com.kunji.mijawharati.viewmodel.ProductViewModel
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_PRODUCT_LIST,
+    startDestination: String = ROUT_SPLASH,
     productViewModel: ProductViewModel = viewModel(),
 
     ) {
@@ -60,10 +67,30 @@ fun AppNavHost(
             AboutScreen(navController)
         }
 
+        composable(ROUT_PICTURE) {
+            PictureScreen(navController)
+        }
+
 
         composable("CategoryScreen") {
             CategoryScreen(navController)
         }
+
+        composable(ROUT_CART) {
+            CartScreen(navController)
+        }
+
+        composable(ROUT_ONBOARDING) {
+            OnboardingScreen(navController)
+        }
+
+
+
+        composable(ROUT_SETTINGS) {
+            SettingsScreen(navController)
+        }
+
+
 
 
         composable("MenScreen") {
@@ -81,6 +108,7 @@ fun AppNavHost(
 
         composable("ContactsScreen") {
             ContactsScreen(navController)
+
         }
 
         composable(ROUT_SPLASH) {
@@ -90,6 +118,11 @@ fun AppNavHost(
         composable(ROUT_LANDING) {
             LandingScreen(navController)
         }
+
+        composable(ROUT_ADMINDASHBOARD) {
+            AdminDashboardScreen(navController)
+        }
+
 
 
 
@@ -139,6 +172,9 @@ fun AppNavHost(
 
     }
 }
+
+
+
 
 
 

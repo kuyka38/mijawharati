@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import com.kunji.mijawharati.navigation.AppNavHost
 
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,3 +19,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
+
+
