@@ -45,6 +45,7 @@ import com.kunji.mijawharati.model.Product
 import com.kunji.mijawharati.navigation.ROUT_ADD_PRODUCT
 import com.kunji.mijawharati.navigation.ROUT_EDIT_PRODUCT
 import com.kunji.mijawharati.navigation.ROUT_PRODUCT_LIST
+import com.kunji.mijawharati.navigation.ROUT_ADMINDASHBOARD
 import com.kunji.mijawharati.navigation.editProductRoute
 import com.kunji.mijawharati.viewmodel.ProductViewModel
 import java.io.IOException
@@ -79,6 +80,15 @@ fun ProductListScreen(navController: NavController, viewModel: ProductViewModel)
                             fontWeight = FontWeight.Bold,
                             color = EmeraldGreen
                         )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.navigate(ROUT_ADMINDASHBOARD) }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Back",
+                                tint = EmeraldGreen
+                            )
+                        }
                     },
                     colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = CreamWhite),
                     actions = {

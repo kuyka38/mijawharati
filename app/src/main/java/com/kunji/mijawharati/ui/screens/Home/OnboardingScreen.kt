@@ -30,7 +30,7 @@ fun OnboardingScreen(navController: NavController) {
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img_17),
+            painter = painterResource(id = R.drawable.img),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -43,15 +43,7 @@ fun OnboardingScreen(navController: NavController) {
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Paragraph text
-            Text(
-                text = "From bold statement designs to subtle everyday elegance, discover unique pieces crafted for everyone. Explore our men’s and women’s collections to find the perfect jewellery that reflects your style and story..",
-                fontSize = 16.sp,
-                fontFamily = FontFamily.Serif,
-                color = CreamWhite,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+
 
             // Row to align button bottom-right
             Row(

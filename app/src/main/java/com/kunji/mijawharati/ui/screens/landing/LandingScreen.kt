@@ -1,6 +1,6 @@
 package com.kunji.mijawharati.ui.screens.landing
 
-import android.widget.Toast
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,13 +10,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -56,8 +56,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
+import com.kunji.mijawharati.navigation.ROUT_ANKLETS
+import com.kunji.mijawharati.navigation.ROUT_BRACELETS
 import com.kunji.mijawharati.navigation.ROUT_CART
+import com.kunji.mijawharati.navigation.ROUT_EARRINGS
+import com.kunji.mijawharati.navigation.ROUT_NECKLACES
+import com.kunji.mijawharati.navigation.ROUT_RINGS
 import com.kunji.mijawharati.navigation.ROUT_SETTINGS
+import com.kunji.mijawharati.navigation.ROUT_WATCHES
 import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 import kotlinx.coroutines.delay
@@ -70,23 +76,21 @@ data class Product(
 )
 
 @Composable
-fun ProductGrid() {
-    val context = LocalContext.current
-
+fun ProductGrid(navController: NavController) {
     val products = listOf(
         Product("Necklaces", R.drawable.img_19),
         Product("Bracelets", R.drawable.img_18),
         Product("Rings", R.drawable.img_20),
-        Product("Earings", R.drawable.img_21),
+        Product("Earings", R.drawable.earing),
         Product("Watches", R.drawable.img_22),
-        Product("Anklets", R.drawable.img_23)
+        Product("Anklets", R.drawable.ankletback)
     )
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp) // constrain height since inside verticalScroll
+            .height(300.dp)
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -97,7 +101,14 @@ fun ProductGrid() {
                 modifier = Modifier
                     .clip(RoundedCornerShape(12.dp))
                     .clickable {
-                        Toast.makeText(context, "${product.name} clicked", Toast.LENGTH_SHORT).show()
+                        when (product.name) {
+                            "Necklaces" -> navController.navigate(ROUT_NECKLACES)
+                            "Bracelets" -> navController.navigate(ROUT_BRACELETS)
+                            "Rings" -> navController.navigate(ROUT_RINGS)
+                            "Earings" -> navController.navigate(ROUT_EARRINGS)
+                            "Watches" -> navController.navigate(ROUT_WATCHES)
+                            "Anklets" -> navController.navigate(ROUT_ANKLETS)
+                        }
                     }
                     .padding(8.dp)
             ) {
@@ -127,13 +138,14 @@ fun LandingScreen(navController: NavController) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val mContext = LocalContext.current
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
                 modifier = Modifier.width(280.dp),
-                drawerContainerColor = Color.White
+                drawerContainerColor = CreamWhite
             ) {
                 Column(
                     modifier = Modifier
@@ -154,7 +166,6 @@ fun LandingScreen(navController: NavController) {
                         text = "Contact us",
                         fontSize = 18.sp,
                         color = EmeraldGreen,
-                        textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .padding(vertical = 12.dp)
                             .clickable {
@@ -167,7 +178,6 @@ fun LandingScreen(navController: NavController) {
                         text = "About us",
                         fontSize = 18.sp,
                         color = EmeraldGreen,
-                        textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .padding(vertical = 12.dp)
                             .clickable {
@@ -176,13 +186,10 @@ fun LandingScreen(navController: NavController) {
                             }
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
-
                     Text(
                         text = "Settings",
                         fontSize = 18.sp,
                         color = EmeraldGreen,
-                        textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .padding(vertical = 12.dp)
                             .clickable {
@@ -222,13 +229,35 @@ fun LandingScreen(navController: NavController) {
                             Icon(Icons.Default.Menu, contentDescription = "Menu")
                         }
                     },
+                    actions = {
+                        IconButton(onClick = {
+                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "Check out MiJawharati – discover elegant jewelry collections!"
+                                )
+                            }
+                            mContext.startActivity(
+                                Intent.createChooser(shareIntent, "Share via")
+                            )
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Share,
+                                contentDescription = "Share",
+                                tint = CreamWhite
+                            )
+                        }
+                    },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = EmeraldGreen,
                         titleContentColor = CreamWhite,
-                        navigationIconContentColor = CreamWhite
+                        navigationIconContentColor = CreamWhite,
+                        actionIconContentColor = CreamWhite
                     )
                 )
             },
+
             bottomBar = {
                 BottomAppBar(containerColor = EmeraldGreen) {
                     Row(
@@ -302,7 +331,7 @@ fun LandingScreen(navController: NavController) {
                 )
 
                 // Insert Grid here
-                ProductGrid()
+                ProductGrid(navController)
 
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -380,7 +409,7 @@ fun LandingScreen(navController: NavController) {
                 )
 
                 Button(
-                    onClick = { navController.navigate("CategoryScreen") },
+                    onClick = { },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),

@@ -17,19 +17,21 @@ import com.kunji.mijawharati.data.UserDatabase
 import com.kunji.mijawharati.repository.UserRepository
 import com.kunji.mijawharati.ui.screens.about.AboutScreen
 import com.kunji.mijawharati.ui.screens.auth.LoginScreen
-import com.kunji.mijawharati.ui.screens.category.CategoryScreen
 import com.kunji.mijawharati.ui.screens.contact.ContactsScreen
 import com.kunji.mijawharati.ui.screens.intent.IntentScreen
 import com.kunji.mijawharati.ui.screens.Home.HomeScreen
 import com.kunji.mijawharati.ui.screens.admin.AdminDashboardScreen
 import com.kunji.mijawharati.ui.screens.ladies.SplashScreen
-import com.kunji.mijawharati.ui.screens.ladies.LadiesScreen
 import com.kunji.mijawharati.viewmodel.AuthViewModel
 import com.kunji.mijawharati.ui.screens.auth.RegisterScreen
 import com.kunji.mijawharati.ui.screens.cart.CartScreen
-
+import com.kunji.mijawharati.ui.screens.items.AnkletsScreen
+import com.kunji.mijawharati.ui.screens.items.BraceletsScreen
+import com.kunji.mijawharati.ui.screens.items.EarringsScreen
+import com.kunji.mijawharati.ui.screens.items.NecklacesScreen
+import com.kunji.mijawharati.ui.screens.items.RingsScreen
+import com.kunji.mijawharati.ui.screens.items.WatchesScreen
 import com.kunji.mijawharati.ui.screens.landing.LandingScreen
-import com.kunji.mijawharati.ui.screens.men.MenScreen
 import com.kunji.mijawharati.ui.screens.onboarding.OnboardingScreen
 import com.kunji.mijawharati.ui.screens.picture.PictureScreen
 import com.kunji.mijawharati.ui.screens.products.AddProductScreen
@@ -72,10 +74,6 @@ fun AppNavHost(
         }
 
 
-        composable("CategoryScreen") {
-            CategoryScreen(navController)
-        }
-
         composable(ROUT_CART) {
             CartScreen(navController)
         }
@@ -88,17 +86,6 @@ fun AppNavHost(
 
         composable(ROUT_SETTINGS) {
             SettingsScreen(navController)
-        }
-
-
-
-
-        composable("MenScreen") {
-            MenScreen(navController)
-        }
-
-        composable("LadiesScreen") {
-            LadiesScreen(navController)
         }
 
 
@@ -121,6 +108,34 @@ fun AppNavHost(
 
         composable(ROUT_ADMINDASHBOARD) {
             AdminDashboardScreen(navController)
+        }
+
+        composable(ROUT_ADMINDASHBOARD) {
+            AdminDashboardScreen(navController)
+        }
+
+        composable(ROUT_NECKLACES) {
+            NecklacesScreen(navController)
+        }
+
+        composable(ROUT_BRACELETS) {
+            BraceletsScreen(navController)
+        }
+
+        composable(ROUT_RINGS) {
+            RingsScreen(navController)
+        }
+
+        composable(ROUT_EARRINGS) {
+            EarringsScreen(navController)
+        }
+
+        composable(ROUT_WATCHES) {
+            WatchesScreen(navController)
+        }
+
+        composable(ROUT_ANKLETS) {
+            AnkletsScreen(navController)
         }
 
 

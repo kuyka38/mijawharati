@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.kunji.mijawharati.navigation.ROUT_LADIES
+
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 import com.kunji.mijawharati.R
 
@@ -66,7 +66,7 @@ fun IntentScreen(navController: NavController){
             TopAppBar(
                 title = { Text("Details") },
                 navigationIcon = {
-                    IconButton(onClick = { ROUT_LADIES }) {
+                    IconButton(onClick = { }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -129,7 +129,7 @@ fun IntentScreen(navController: NavController){
                 modifier = Modifier //background image and scroll
                     .padding(paddingValues)
                     .fillMaxSize()
-                    .paint(painter = painterResource(R.drawable.back1), contentScale = ContentScale.FillBounds)
+                    .paint(painter = painterResource(R.drawable.img_8), contentScale = ContentScale.FillBounds)
                     .verticalScroll(rememberScrollState())
 
 

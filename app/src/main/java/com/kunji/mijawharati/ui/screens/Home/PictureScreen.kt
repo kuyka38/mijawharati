@@ -30,7 +30,7 @@ fun PictureScreen(navController: NavController) {
         modifier = Modifier.fillMaxSize()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img_7),
+            painter = painterResource(id = R.drawable.img_1),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -44,16 +44,9 @@ fun PictureScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Text(
-                text = "WELCOME TO MIJAWHARATI",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = EmeraldGreen,
-                textAlign = TextAlign.Center,
-                fontFamily = FontFamily.Serif
-            )
 
-            Spacer(modifier = Modifier.height(16.dp))
+
+
 
             // Paragraph text
             Text(
@@ -64,6 +57,7 @@ fun PictureScreen(navController: NavController) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Row to align button bottom-right
             Row(

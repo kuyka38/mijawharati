@@ -1,19 +1,22 @@
 package com.kunji.mijawharati.navigation
 
 const val ROUT_HOME ="home"
-const val ROUT_CATEGORY ="category"
 const val ROUT_ABOUT ="about"
-const val ROUT_MEN ="men"
 const val ROUT_SPLASH ="splash"
 const val ROUT_INTENT ="intent"
 const val ROUT_CONTACT ="contact"
-const val ROUT_LADIES ="ladies"
 const val ROUT_LANDING ="landing"
 const val ROUT_SETTINGS = "settings"
-const val ROUT_CART = "cart"
+const val ROUT_CART = "CartScreen"
 const val ROUT_PICTURE = "picture"
 const val ROUT_ONBOARDING = "onboarding"
 const val ROUT_ADMINDASHBOARD = "admindashboard"
+const val ROUT_NECKLACES = "necklaces"
+const val ROUT_BRACELETS = "bracelets"
+const val ROUT_RINGS = "rings"
+const val ROUT_EARRINGS = "earrings"
+const val ROUT_WATCHES = "watches"
+const val ROUT_ANKLETS = "anklets"
 
 
 

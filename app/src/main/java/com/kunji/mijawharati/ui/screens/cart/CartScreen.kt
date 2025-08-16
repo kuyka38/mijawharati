@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
-import com.kunji.mijawharati.navigation.ROUT_CATEGORY
 import com.kunji.mijawharati.navigation.ROUT_LANDING
 import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
@@ -35,8 +34,8 @@ fun CartScreen(navController: NavController) {
                 title = { Text(" Shopping Cart") },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController.navigate("CategoryScreen") {
-                            popUpTo("CategoryScreen") { inclusive = true }
+                        navController.navigate(ROUT_LANDING) {
+                            popUpTo("LandingScreen") { inclusive = true }
                         }
                     }) {
                         Icon(
@@ -119,7 +118,7 @@ fun CartScreen(navController: NavController) {
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Image(
-                        painter = painterResource(id = R.drawable.img_13),
+                        painter = painterResource(id = R.drawable.shoppingcart),
                         contentDescription = "Cart",
                         modifier = Modifier.size(60.dp)
                     )
