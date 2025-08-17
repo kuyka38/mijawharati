@@ -299,7 +299,7 @@ fun LandingScreen(navController: NavController) {
                     .background(CreamWhite)
             ) {
                 // Carousel logic
-                val carouselImages = listOf(R.drawable.img_6, R.drawable.img_6, R.drawable.img_6)
+                val carouselImages = listOf(R.drawable.landing, R.drawable.landing, R.drawable.landing)
                 var currentImageIndex by remember { mutableStateOf(0) }
 
                 LaunchedEffect(Unit) {
@@ -312,20 +312,21 @@ fun LandingScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Image(
-                    painter = painterResource(id = R.drawable.img_6),
+                    painter = painterResource(id = R.drawable.landing),
                     contentDescription = "Banner",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(250.dp)
+                        .height(230.dp)
                         .padding(16.dp)
                         .clip(RoundedCornerShape(12.dp))
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Text(
-                    text = "Shop Our Categories",
+                    text = "Shop by Categories",
+                    fontSize = 25.sp,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
                 )
@@ -337,8 +338,9 @@ fun LandingScreen(navController: NavController) {
 
                 Text(
                     text = "Upcoming Korean Collection",
+                    fontSize = 25.sp,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp)
+                    modifier = Modifier.padding(start = 16.dp, top = 15.dp, bottom = 8.dp)
                 )
 
                 Row(
@@ -349,7 +351,7 @@ fun LandingScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.img_3),
+                        painter = painterResource(id = R.drawable.korean1),
                         contentDescription = "Korean Necklace",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -358,7 +360,7 @@ fun LandingScreen(navController: NavController) {
                             .clip(RoundedCornerShape(10.dp))
                     )
                     Image(
-                        painter = painterResource(id = R.drawable.img_4),
+                        painter = painterResource(id = R.drawable.korean),
                         contentDescription = "Korean Earring",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -367,7 +369,7 @@ fun LandingScreen(navController: NavController) {
                             .clip(RoundedCornerShape(10.dp))
                     )
                     Image(
-                        painter = painterResource(id = R.drawable.img_2),
+                        painter = painterResource(id = R.drawable.img_3),
                         contentDescription = "Korean Pendant",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -375,14 +377,27 @@ fun LandingScreen(navController: NavController) {
                             .height(180.dp)
                             .clip(RoundedCornerShape(10.dp))
                     )
+
+                    Image(
+                        painter = painterResource(id = R.drawable.img_4),
+                        contentDescription = "Korean Pendant",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .width(280.dp)
+                            .height(180.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                    )
+
+
+
                 }
 
                 Spacer(modifier = Modifier.height(5.dp))
 
                 Text(
                     text = "Delicate, timeless, and effortlessly chic — our upcoming Korean Collection is your next jewellery obsession.",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(start = 16.dp, top = 20.dp, bottom = 8.dp)
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
@@ -394,7 +409,7 @@ fun LandingScreen(navController: NavController) {
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.img_5),
+                        painter = painterResource(id = R.drawable.add),
                         contentDescription = "Centered Image",
                         modifier = Modifier.size(650.dp)
                     )
@@ -403,9 +418,10 @@ fun LandingScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "Shop our exclusive Men's and Women's collections, where elegance meets craftsmanship. Discover timeless pieces designed to complement every style.",
+                    text = "Find an everyday statement piece - simple but elegant",
                     fontSize = 15.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
                 )
 
                 Button(

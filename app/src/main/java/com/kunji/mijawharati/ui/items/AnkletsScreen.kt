@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Person
@@ -32,8 +31,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
+import com.kunji.mijawharati.navigation.ROUT_CART
 import com.kunji.mijawharati.navigation.ROUT_LANDING
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
+import kotlinx.coroutines.launch
 
 data class AnkletProduct(
     val id: Int,
@@ -44,13 +45,18 @@ data class AnkletProduct(
     val imageRes: Int
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnkletsScreen(navController: NavController) {
     val mContext = LocalContext.current
     val searchQuery = remember { mutableStateOf("") }
     var selectedBottomItem by remember { mutableStateOf(0) }
-
     var cartCount by remember { mutableStateOf(0) }
+
+    // State for bottom sheet
+    var selectedProduct by remember { mutableStateOf<AnkletProduct?>(null) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val coroutineScope = rememberCoroutineScope()
 
     val ankletProducts = listOf(
         AnkletProduct(1, "Gold Dolphin Anklet", "Love Jewellery", "KES 1,000", 4.5, R.drawable.anklet1),
@@ -58,6 +64,7 @@ fun AnkletsScreen(navController: NavController) {
         AnkletProduct(3, "Gema-Crystal Anklet", "Swarovski", "KES 1,500", 4.8, R.drawable.anklet3),
         AnkletProduct(4, "Garden-flower Anklet", "Beach Style", "KES 950", 4.4, R.drawable.anklet),
     )
+
 
     Scaffold(
         bottomBar = {
@@ -77,7 +84,6 @@ fun AnkletsScreen(navController: NavController) {
                     icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart") },
                     label = { Text("Cart") }
                 )
-
                 NavigationBarItem(
                     selected = selectedBottomItem == 2,
                     onClick = { selectedBottomItem = 2 },
@@ -112,10 +118,7 @@ fun AnkletsScreen(navController: NavController) {
                         contentDescription = "Back",
                         tint = Color.White
                     )
-
-
                 }
-
 
                 Text(
                     text = "Anklets Collection",
@@ -153,7 +156,7 @@ fun AnkletsScreen(navController: NavController) {
 
                 Text(
                     text = "From minimalistic silver to vibrant beads — anklets for every style.",
-                    color = Color.LightGray,
+                    color = Color.Gray,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -188,7 +191,10 @@ fun AnkletsScreen(navController: NavController) {
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .padding(8.dp)
-                            .clickable { /* TODO: Navigate to details */ },
+                            .clickable {
+                                selectedProduct = product
+                                coroutineScope.launch { sheetState.show() }
+                            },
                         colors = CardDefaults.cardColors(containerColor = Color.White),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
@@ -209,32 +215,66 @@ fun AnkletsScreen(navController: NavController) {
                             Text(product.brand, fontSize = 12.sp, color = Color.Gray)
                             Text(product.price, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = EmeraldGreen)
                             Text("⭐ ${product.rating}", fontSize = 12.sp, color = Color.Gray)
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Button(
-                                onClick = {
-                                    cartCount++
-                                    Toast.makeText(
-                                        mContext,
-                                        "${product.name} added to cart",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text("Add to Cart", color = Color.White, fontSize = 12.sp)
-                            }
-                            Button(
-                                onClick = {
-                                    val simToolKitLaunchIntent =
-                                        mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                    simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text("Buy Now", color = Color.White, fontSize = 12.sp)
-                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Product Details Bottom Sheet
+        if (selectedProduct != null) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    coroutineScope.launch { sheetState.hide() }
+                        .invokeOnCompletion { if (!sheetState.isVisible) selectedProduct = null }
+                },
+                sheetState = sheetState,
+                containerColor = Color.White,
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                dragHandle = { BottomSheetDefaults.DragHandle() }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight(0.9f) // Taller sheet (90% of screen height)
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp)
+                ) {
+                    selectedProduct?.let { product ->
+                        Image(
+                            painter = painterResource(id = product.imageRes),
+                            contentDescription = product.name,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .height(250.dp)
+                                .fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(product.name, fontWeight = FontWeight.Bold, fontSize = 22.sp)
+                        Text(product.brand, fontSize = 16.sp, color = Color.Gray)
+                        Text(product.price, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = EmeraldGreen)
+                        Text("⭐ ${product.rating}", fontSize = 14.sp, color = Color.Gray)
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = {
+                                cartCount++
+                                Toast.makeText(mContext, "${product.name} added to cart", Toast.LENGTH_SHORT).show()
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Add to Cart", color = Color.White, fontSize = 16.sp)
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = {
+                                val simToolKitLaunchIntent =
+                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
+                                simToolKitLaunchIntent?.let { mContext.startActivity(it) }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Buy Now", color = Color.White, fontSize = 16.sp)
                         }
                     }
                 }
@@ -248,5 +288,3 @@ fun AnkletsScreen(navController: NavController) {
 fun AnkletsScreenPreview() {
     AnkletsScreen(navController = rememberNavController())
 }
-
-

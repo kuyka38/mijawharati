@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Person
@@ -32,11 +31,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
+import com.kunji.mijawharati.navigation.ROUT_CART
 import com.kunji.mijawharati.navigation.ROUT_LANDING
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
-
-// Route constant for cart
-const val ROUT_CART= "CartScreen"
+import kotlinx.coroutines.launch
 
 data class NecklaceProduct(
     val id: Int,
@@ -47,14 +45,18 @@ data class NecklaceProduct(
     val imageRes: Int
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NecklacesScreen(navController: NavController) {
     val mContext = LocalContext.current
     val searchQuery = remember { mutableStateOf("") }
     var selectedBottomItem by remember { mutableStateOf(0) }
-
-    // Track cart count
     var cartCount by remember { mutableStateOf(0) }
+
+    // State for bottom sheet
+    var selectedProduct by remember { mutableStateOf<NecklaceProduct?>(null) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val coroutineScope = rememberCoroutineScope()
 
     val necklaceProducts = listOf(
         NecklaceProduct(1, "Gold Necklace", "Luxury Gems", "KES 800", 4.8, R.drawable.neck1),
@@ -64,7 +66,8 @@ fun NecklacesScreen(navController: NavController) {
         NecklaceProduct(4, "Silver Chrome Hearts", "Chrome Hearts", "KES 1000", 4.6, R.drawable.neck5),
         NecklaceProduct(4, "Gold Chrome Hearts", "Chrome Hearts", "KES 1000", 4.6, R.drawable.neck6),
 
-    )
+        )
+
 
     Scaffold(
         bottomBar = {
@@ -84,10 +87,9 @@ fun NecklacesScreen(navController: NavController) {
                     icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart") },
                     label = { Text("Cart") }
                 )
-
                 NavigationBarItem(
                     selected = selectedBottomItem == 2,
-                    onClick = { selectedBottomItem = 2 /* Navigate profile */ },
+                    onClick = { selectedBottomItem = 2 },
                     icon = { Icon(Icons.Filled.Person, contentDescription = "Profile") },
                     label = { Text("Profile") }
                 )
@@ -101,7 +103,7 @@ fun NecklacesScreen(navController: NavController) {
                 .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
         ) {
-            // Top bar
+            // Top Bar
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -116,7 +118,7 @@ fun NecklacesScreen(navController: NavController) {
                 }) {
                     Icon(
                         imageVector = Icons.Filled.KeyboardArrowLeft,
-                        contentDescription = "Back to category",
+                        contentDescription = "Back",
                         tint = Color.White
                     )
                 }
@@ -129,7 +131,6 @@ fun NecklacesScreen(navController: NavController) {
                     modifier = Modifier.weight(1f)
                 )
 
-                // Cart icon with badge
                 BadgedBox(
                     badge = {
                         if (cartCount > 0) {
@@ -137,24 +138,20 @@ fun NecklacesScreen(navController: NavController) {
                         }
                     }
                 ) {
-                    IconButton(onClick = { navController.navigate(ROUT_CART) }) {
-                        Icon(
-                            Icons.Filled.ShoppingCart,
-                            contentDescription = "Cart",
-                            tint = Color.White
-                        )
+                    IconButton(onClick = { navController.navigate("LandingScreen") }) {
+                        Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart", tint = Color.White)
                     }
                 }
             }
 
-            // Banner Image
+            // Banner
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.necklaceback), // Necklace banner
+                    painter = painterResource(id = R.drawable.necklaceback),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -162,7 +159,7 @@ fun NecklacesScreen(navController: NavController) {
 
                 Text(
                     text = "Explore our exclusive Necklace Collection—timeless, elegant, and crafted to enhance your beauty.",
-                    color = Color.LightGray,
+                    color = Color.Gray,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -171,11 +168,11 @@ fun NecklacesScreen(navController: NavController) {
                 )
             }
 
-            // Search bar
+            // Search
             OutlinedTextField(
                 value = searchQuery.value,
                 onValueChange = { searchQuery.value = it },
-                placeholder = { Text("Search necklaces...", fontSize = 14.sp) },
+                placeholder = { Text("Search earrings...", fontSize = 14.sp) },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -186,7 +183,7 @@ fun NecklacesScreen(navController: NavController) {
                 )
             )
 
-            // Products Grid
+            // Grid
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(8.dp),
@@ -197,7 +194,10 @@ fun NecklacesScreen(navController: NavController) {
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .padding(8.dp)
-                            .clickable { /* Navigate to details */ },
+                            .clickable {
+                                selectedProduct = product
+                                coroutineScope.launch { sheetState.show() }
+                            },
                         colors = CardDefaults.cardColors(containerColor = Color.White),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
@@ -218,32 +218,66 @@ fun NecklacesScreen(navController: NavController) {
                             Text(product.brand, fontSize = 12.sp, color = Color.Gray)
                             Text(product.price, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = EmeraldGreen)
                             Text("⭐ ${product.rating}", fontSize = 12.sp, color = Color.Gray)
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Button(
-                                onClick = {
-                                    cartCount++
-                                    Toast.makeText(
-                                        mContext,
-                                        "${product.name} added to cart",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text("Add to Cart", color = Color.White, fontSize = 12.sp)
-                            }
-                            Button(
-                                onClick = {
-                                    val simToolKitLaunchIntent =
-                                        mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                    simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text("Buy Now", color = Color.White, fontSize = 12.sp)
-                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Product Details Bottom Sheet
+        if (selectedProduct != null) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    coroutineScope.launch { sheetState.hide() }
+                        .invokeOnCompletion { if (!sheetState.isVisible) selectedProduct = null }
+                },
+                sheetState = sheetState,
+                containerColor = Color.White,
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                dragHandle = { BottomSheetDefaults.DragHandle() }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight(0.9f) // Taller sheet (90% of screen height)
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp)
+                ) {
+                    selectedProduct?.let { product ->
+                        Image(
+                            painter = painterResource(id = product.imageRes),
+                            contentDescription = product.name,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .height(250.dp)
+                                .fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(product.name, fontWeight = FontWeight.Bold, fontSize = 22.sp)
+                        Text(product.brand, fontSize = 16.sp, color = Color.Gray)
+                        Text(product.price, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = EmeraldGreen)
+                        Text("⭐ ${product.rating}", fontSize = 14.sp, color = Color.Gray)
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = {
+                                cartCount++
+                                Toast.makeText(mContext, "${product.name} added to cart", Toast.LENGTH_SHORT).show()
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Add to Cart", color = Color.White, fontSize = 16.sp)
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = {
+                                val simToolKitLaunchIntent =
+                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
+                                simToolKitLaunchIntent?.let { mContext.startActivity(it) }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Buy Now", color = Color.White, fontSize = 16.sp)
                         }
                     }
                 }
@@ -257,5 +291,3 @@ fun NecklacesScreen(navController: NavController) {
 fun NecklacesScreenPreview() {
     NecklacesScreen(navController = rememberNavController())
 }
-
-

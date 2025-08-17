@@ -31,8 +31,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
+import com.kunji.mijawharati.navigation.ROUT_CART
 import com.kunji.mijawharati.navigation.ROUT_LANDING
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
+import kotlinx.coroutines.launch
 
 data class RingProduct(
     val id: Int,
@@ -43,13 +45,18 @@ data class RingProduct(
     val imageRes: Int
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RingsScreen(navController: NavController) {
     val mContext = LocalContext.current
     val searchQuery = remember { mutableStateOf("") }
     var selectedBottomItem by remember { mutableStateOf(0) }
-
     var cartCount by remember { mutableStateOf(0) }
+
+    // State for bottom sheet
+    var selectedProduct by remember { mutableStateOf<RingProduct?>(null) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val coroutineScope = rememberCoroutineScope()
 
     val ringProducts = listOf(
         RingProduct(1, "Diamond Solitaire Ring", "Elegant Gems", "KES 500", 4.9, R.drawable.ring1),
@@ -59,6 +66,7 @@ fun RingsScreen(navController: NavController) {
         RingProduct(4, " Men Silver  Ring", "Monica Veduri", "KES 700", 4.5, R.drawable.ring5),
         RingProduct(4, "Silver-Snake Ring", "Graff", "KES 850", 4.5, R.drawable.ring6),
     )
+
 
     Scaffold(
         bottomBar = {
@@ -78,7 +86,6 @@ fun RingsScreen(navController: NavController) {
                     icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart") },
                     label = { Text("Cart") }
                 )
-
                 NavigationBarItem(
                     selected = selectedBottomItem == 2,
                     onClick = { selectedBottomItem = 2 },
@@ -151,7 +158,7 @@ fun RingsScreen(navController: NavController) {
 
                 Text(
                     text = "Discover rings that capture love, elegance, and individuality.",
-                    color = Color.LightGray,
+                    color = Color.Gray,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -186,7 +193,10 @@ fun RingsScreen(navController: NavController) {
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .padding(8.dp)
-                            .clickable { /* TODO: Navigate to details */ },
+                            .clickable {
+                                selectedProduct = product
+                                coroutineScope.launch { sheetState.show() }
+                            },
                         colors = CardDefaults.cardColors(containerColor = Color.White),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
@@ -207,32 +217,66 @@ fun RingsScreen(navController: NavController) {
                             Text(product.brand, fontSize = 12.sp, color = Color.Gray)
                             Text(product.price, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = EmeraldGreen)
                             Text("⭐ ${product.rating}", fontSize = 12.sp, color = Color.Gray)
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Button(
-                                onClick = {
-                                    cartCount++
-                                    Toast.makeText(
-                                        mContext,
-                                        "${product.name} added to cart",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text("Add to Cart", color = Color.White, fontSize = 12.sp)
-                            }
-                            Button(
-                                onClick = {
-                                    val simToolKitLaunchIntent =
-                                        mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                    simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text("Buy Now", color = Color.White, fontSize = 12.sp)
-                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Product Details Bottom Sheet
+        if (selectedProduct != null) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    coroutineScope.launch { sheetState.hide() }
+                        .invokeOnCompletion { if (!sheetState.isVisible) selectedProduct = null }
+                },
+                sheetState = sheetState,
+                containerColor = Color.White,
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                dragHandle = { BottomSheetDefaults.DragHandle() }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight(0.9f) // Taller sheet (90% of screen height)
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp)
+                ) {
+                    selectedProduct?.let { product ->
+                        Image(
+                            painter = painterResource(id = product.imageRes),
+                            contentDescription = product.name,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .height(250.dp)
+                                .fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(product.name, fontWeight = FontWeight.Bold, fontSize = 22.sp)
+                        Text(product.brand, fontSize = 16.sp, color = Color.Gray)
+                        Text(product.price, fontWeight = FontWeight.Bold, fontSize = 20.sp, color = EmeraldGreen)
+                        Text("⭐ ${product.rating}", fontSize = 14.sp, color = Color.Gray)
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = {
+                                cartCount++
+                                Toast.makeText(mContext, "${product.name} added to cart", Toast.LENGTH_SHORT).show()
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Add to Cart", color = Color.White, fontSize = 16.sp)
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = {
+                                val simToolKitLaunchIntent =
+                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
+                                simToolKitLaunchIntent?.let { mContext.startActivity(it) }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Buy Now", color = Color.White, fontSize = 16.sp)
                         }
                     }
                 }
@@ -246,5 +290,3 @@ fun RingsScreen(navController: NavController) {
 fun RingsScreenPreview() {
     RingsScreen(navController = rememberNavController())
 }
-
-

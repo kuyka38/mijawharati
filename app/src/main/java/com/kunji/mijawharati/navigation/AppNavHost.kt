@@ -48,7 +48,7 @@ import com.kunji.mijawharati.viewmodel.ProductViewModel
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_SPLASH,
+    startDestination: String = ROUT_RINGS,
     productViewModel: ProductViewModel = viewModel(),
 
     ) {
