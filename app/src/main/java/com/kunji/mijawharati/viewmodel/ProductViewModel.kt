@@ -12,13 +12,16 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-
 class ProductViewModel(app: Application) : AndroidViewModel(app) {
 
     private val context = app.applicationContext
     private val productDao = ProductDatabase.getDatabase(app).productDao()
 
+    // LiveData for all products
     val allProducts: LiveData<List<Product>> = productDao.getAllProducts()
+
+    // 👇 Add this line
+    val favoriteProducts: LiveData<List<Product>> = productDao.getFavoriteProducts()
 
     fun addProduct(name: String, price: Double, phone: String, imageUri: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -27,7 +30,8 @@ class ProductViewModel(app: Application) : AndroidViewModel(app) {
                 name = name,
                 price = price,
                 phone = phone,
-                imagePath = savedImagePath
+                imagePath = savedImagePath,
+                isFavorite = false // default
             )
             productDao.insertProduct(newProduct)
         }
@@ -43,6 +47,13 @@ class ProductViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(Dispatchers.IO) {
             deleteImageFromInternalStorage(product.imagePath)
             productDao.deleteProduct(product)
+        }
+    }
+
+    fun toggleFavorite(product: Product) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val newState = !product.isFavorite
+            productDao.setFavorite(product.id, newState)
         }
     }
 

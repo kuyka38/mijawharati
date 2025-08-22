@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
@@ -60,9 +61,11 @@ import com.kunji.mijawharati.navigation.ROUT_ANKLETS
 import com.kunji.mijawharati.navigation.ROUT_BRACELETS
 import com.kunji.mijawharati.navigation.ROUT_CART
 import com.kunji.mijawharati.navigation.ROUT_EARRINGS
+import com.kunji.mijawharati.navigation.ROUT_FAVORITES
 import com.kunji.mijawharati.navigation.ROUT_NECKLACES
+import com.kunji.mijawharati.navigation.ROUT_PRODUCT_SCREEN_LIST
 import com.kunji.mijawharati.navigation.ROUT_RINGS
-import com.kunji.mijawharati.navigation.ROUT_SETTINGS
+import com.kunji.mijawharati.navigation.ROUT_UPLOAD_CONTACT
 import com.kunji.mijawharati.navigation.ROUT_WATCHES
 import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
@@ -158,7 +161,6 @@ fun LandingScreen(navController: NavController) {
                         text = "MIJAWHARATI",
                         fontWeight = FontWeight.Bold,
                         fontSize = 35.sp,
-                        color = EmeraldGreen,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
 
@@ -170,7 +172,7 @@ fun LandingScreen(navController: NavController) {
                             .padding(vertical = 12.dp)
                             .clickable {
                                 scope.launch { drawerState.close() }
-                                navController.navigate("ContactsScreen")
+                                navController.navigate(ROUT_UPLOAD_CONTACT)
                             }
                     )
 
@@ -183,18 +185,6 @@ fun LandingScreen(navController: NavController) {
                             .clickable {
                                 scope.launch { drawerState.close() }
                                 navController.navigate("AboutScreen")
-                            }
-                    )
-
-                    Text(
-                        text = "Settings",
-                        fontSize = 18.sp,
-                        color = EmeraldGreen,
-                        modifier = Modifier
-                            .padding(vertical = 12.dp)
-                            .clickable {
-                                scope.launch { drawerState.close() }
-                                navController.navigate(ROUT_SETTINGS)
                             }
                     )
 
@@ -270,6 +260,27 @@ fun LandingScreen(navController: NavController) {
                             Icon(Icons.Default.Home, contentDescription = "Home", tint = CreamWhite)
                             Text("Home", color = CreamWhite, fontSize = 12.sp)
                         }
+
+
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.clickable {
+                                navController.navigate(ROUT_FAVORITES)
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.Favorite,
+                                contentDescription = "Favorite",
+                                tint = CreamWhite
+                            )
+                            Text("Favorites", color = CreamWhite, fontSize = 12.sp)
+                        }
+
+
+
+
+
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.clickable {
@@ -282,10 +293,6 @@ fun LandingScreen(navController: NavController) {
                                 tint = CreamWhite
                             )
                             Text("Cart", color = CreamWhite, fontSize = 12.sp)
-                        }
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(Icons.Default.Person, contentDescription = "Profile", tint = CreamWhite)
-                            Text("Profile", color = CreamWhite, fontSize = 12.sp)
                         }
                     }
                 }
@@ -425,7 +432,7 @@ fun LandingScreen(navController: NavController) {
                 )
 
                 Button(
-                    onClick = { },
+                    onClick = { navController.navigate(ROUT_PRODUCT_SCREEN_LIST)},
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
@@ -435,7 +442,7 @@ fun LandingScreen(navController: NavController) {
                     ),
                     shape = RoundedCornerShape(10.dp)
                 ) {
-                    Text("Shop Now")
+                    Text("View More Products")
                 }
             }
         }

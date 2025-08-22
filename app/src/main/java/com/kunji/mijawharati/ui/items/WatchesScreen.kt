@@ -12,9 +12,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -32,8 +32,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.navigation.ROUT_CART
+import com.kunji.mijawharati.navigation.ROUT_FAVORITES
 import com.kunji.mijawharati.navigation.ROUT_LANDING
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
+import com.kunji.mijawharati.ui.theme.CreamWhite
 import kotlinx.coroutines.launch
 
 data class WatchProduct(
@@ -53,6 +55,9 @@ fun WatchesScreen(navController: NavController) {
     var selectedBottomItem by remember { mutableStateOf(0) }
     var cartCount by remember { mutableStateOf(0) }
 
+    // Track favorites by product id
+    val favoriteProducts = remember { mutableStateListOf<Int>() }
+
     // State for bottom sheet
     var selectedProduct by remember { mutableStateOf<WatchProduct?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -63,34 +68,38 @@ fun WatchesScreen(navController: NavController) {
         WatchProduct(2, "Pink Dial Watch", "UrbanStyle", "KES 2,800", 4.6, R.drawable.watch2),
         WatchProduct(3, "Elevate Gold Watch", "FitTech", "KES 2,200", 4.7, R.drawable.watch3),
         WatchProduct(4, "Breda Jane Watch", "BREDA Jane", "KES 3,000", 4.9, R.drawable.watch4),
-        WatchProduct(4, "Nebraska-Kearney Watch", "Nebraska Kearney", "KES 4,000", 4.9, R.drawable.watch5),
-        WatchProduct(4, "Tissot Watch", "Tissot", "KES 3,000", 4.9, R.drawable.watch6),
+        WatchProduct(5, "Nebraska-Kearney Watch", "Nebraska Kearney", "KES 4,000", 4.9, R.drawable.watch5),
+        WatchProduct(6, "Tissot Watch", "Tissot", "KES 3,000", 4.9, R.drawable.watch6),
     )
-
 
     Scaffold(
         bottomBar = {
-            NavigationBar(containerColor = Color.White) {
+            NavigationBar(containerColor = EmeraldGreen) {
                 NavigationBarItem(
                     selected = selectedBottomItem == 0,
                     onClick = { selectedBottomItem = 0 },
-                    icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
-                    label = { Text("Home") }
+                    icon = { Icon(Icons.Filled.Home, contentDescription = "Home", tint = CreamWhite) },
+                    label = { Text("Home", color = CreamWhite) }
                 )
+
                 NavigationBarItem(
                     selected = selectedBottomItem == 1,
                     onClick = {
                         selectedBottomItem = 1
-                        navController.navigate(ROUT_CART)
+                        navController.navigate(ROUT_FAVORITES)
                     },
-                    icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart") },
-                    label = { Text("Cart") }
+                    icon = { Icon(Icons.Filled.Favorite, contentDescription = "Favorites", tint = CreamWhite) },
+                    label = { Text("Favorites", color = CreamWhite) }
                 )
+
                 NavigationBarItem(
                     selected = selectedBottomItem == 2,
-                    onClick = { selectedBottomItem = 2 },
-                    icon = { Icon(Icons.Filled.Person, contentDescription = "Profile") },
-                    label = { Text("Profile") }
+                    onClick = {
+                        selectedBottomItem = 2
+                        navController.navigate(ROUT_CART)
+                    },
+                    icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "Cart", tint = CreamWhite) },
+                    label = { Text("Cart", color = CreamWhite) }
                 )
             }
         }
@@ -200,23 +209,45 @@ fun WatchesScreen(navController: NavController) {
                         colors = CardDefaults.cardColors(containerColor = Color.White),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Image(
-                                painter = painterResource(id = product.imageRes),
-                                contentDescription = product.name,
-                                contentScale = ContentScale.Crop,
+                        Box {
+                            Column(
+                                modifier = Modifier.padding(8.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Image(
+                                    painter = painterResource(id = product.imageRes),
+                                    contentDescription = product.name,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .height(120.dp)
+                                        .fillMaxWidth()
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(product.name, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                Text(product.brand, fontSize = 12.sp, color = Color.Gray)
+                                Text(product.price, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = EmeraldGreen)
+                                Text("⭐ ${product.rating}", fontSize = 12.sp, color = Color.Gray)
+                            }
+
+                            // Favorite icon top right
+                            IconButton(
+                                onClick = {
+                                    if (favoriteProducts.contains(product.id)) {
+                                        favoriteProducts.remove(product.id)
+                                    } else {
+                                        favoriteProducts.add(product.id)
+                                    }
+                                },
                                 modifier = Modifier
-                                    .height(120.dp)
-                                    .fillMaxWidth()
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(product.name, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                            Text(product.brand, fontSize = 12.sp, color = Color.Gray)
-                            Text(product.price, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = EmeraldGreen)
-                            Text("⭐ ${product.rating}", fontSize = 12.sp, color = Color.Gray)
+                                    .align(Alignment.TopEnd)
+                                    .padding(4.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Favorite,
+                                    contentDescription = "Favorite",
+                                    tint = if (favoriteProducts.contains(product.id)) EmeraldGreen else Color.Gray
+                                )
+                            }
                         }
                     }
                 }
@@ -237,7 +268,7 @@ fun WatchesScreen(navController: NavController) {
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxHeight(0.9f) // Taller sheet (90% of screen height)
+                        .fillMaxHeight(0.9f)
                         .verticalScroll(rememberScrollState())
                         .padding(16.dp)
                 ) {

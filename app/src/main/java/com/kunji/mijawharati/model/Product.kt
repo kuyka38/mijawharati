@@ -1,6 +1,8 @@
 package com.kunji.mijawharati.model
 
-import android.provider.ContactsContract.CommonDataKinds.Phone
+
+
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,6 +12,7 @@ data class Product(
     val name: String,
     val price: Double,
     val phone: String,
+    val imagePath: String,
+    val isFavorite: Boolean = false,
 
-    val imagePath: String
 )

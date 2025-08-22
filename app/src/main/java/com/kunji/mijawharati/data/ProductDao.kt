@@ -9,6 +9,9 @@ interface ProductDao {
     @Query("SELECT * FROM products")
     fun getAllProducts(): LiveData<List<Product>>
 
+    @Query("SELECT * FROM products WHERE isFavorite = 1")
+    fun getFavoriteProducts(): LiveData<List<Product>>
+
     @Insert
     suspend fun insertProduct(product: Product)
 
@@ -17,4 +20,7 @@ interface ProductDao {
 
     @Delete
     suspend fun deleteProduct(product: Product)
+
+    @Query("UPDATE products SET isFavorite = :isFav WHERE id = :id")
+    suspend fun setFavorite(id: Int, isFav: Boolean)
 }

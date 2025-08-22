@@ -13,11 +13,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.kunji.mijawharati.data.ContactDatabase
 import com.kunji.mijawharati.data.UserDatabase
+import com.kunji.mijawharati.repository.ContactRepository
 import com.kunji.mijawharati.repository.UserRepository
 import com.kunji.mijawharati.ui.screens.about.AboutScreen
 import com.kunji.mijawharati.ui.screens.auth.LoginScreen
-import com.kunji.mijawharati.ui.screens.contact.ContactsScreen
 import com.kunji.mijawharati.ui.screens.intent.IntentScreen
 import com.kunji.mijawharati.ui.screens.Home.HomeScreen
 import com.kunji.mijawharati.ui.screens.admin.AdminDashboardScreen
@@ -25,6 +26,7 @@ import com.kunji.mijawharati.ui.screens.ladies.SplashScreen
 import com.kunji.mijawharati.viewmodel.AuthViewModel
 import com.kunji.mijawharati.ui.screens.auth.RegisterScreen
 import com.kunji.mijawharati.ui.screens.cart.CartScreen
+import com.kunji.mijawharati.ui.screens.favorites.FavoritesScreen
 import com.kunji.mijawharati.ui.screens.items.AnkletsScreen
 import com.kunji.mijawharati.ui.screens.items.BraceletsScreen
 import com.kunji.mijawharati.ui.screens.items.EarringsScreen
@@ -36,11 +38,16 @@ import com.kunji.mijawharati.ui.screens.onboarding.OnboardingScreen
 import com.kunji.mijawharati.ui.screens.picture.PictureScreen
 import com.kunji.mijawharati.ui.screens.products.AddProductScreen
 import com.kunji.mijawharati.ui.screens.products.EditProductScreen
-import com.kunji.mijawharati.ui.screens.products.ProductListScreen
-import com.kunji.mijawharati.ui.screens.settings.SettingsScreen
+import com.kunji.mijawharati.ui.screens.products.FavoritesViewModel
+import com.kunji.mijawharati.ui.screens.products.ProductScreenList
+
+import com.kunji.mijawharati.ui.theme.screens.contact.UploadContactScreen
+import com.kunji.mijawharati.ui.theme.screens.contact.ViewContactScreen
+import com.kunji.mijawharati.viewmodel.ContactViewModel
 
 
 import com.kunji.mijawharati.viewmodel.ProductViewModel
+import com.kunji.mijawharati.ui.screens.products.ProductListScreen
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -48,8 +55,9 @@ import com.kunji.mijawharati.viewmodel.ProductViewModel
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_RINGS,
+    startDestination: String = ROUT_PRODUCT_SCREEN_LIST,
     productViewModel: ProductViewModel = viewModel(),
+    favouritesViewModel: FavoritesViewModel = viewModel(),
 
     ) {
 
@@ -82,21 +90,25 @@ fun AppNavHost(
             OnboardingScreen(navController)
         }
 
-
-
-        composable(ROUT_SETTINGS) {
-            SettingsScreen(navController)
-        }
-
-
         composable(ROUT_INTENT) {
             IntentScreen(navController)
         }
 
-        composable("ContactsScreen") {
-            ContactsScreen(navController)
-
+        composable(ROUT_PRODUCT_SCREEN_LIST) {
+            val favoritesViewModel: FavoritesViewModel = viewModel()
+            ProductScreenList(navController, productViewModel, favoritesViewModel)
         }
+
+
+
+        composable(ROUT_FAVORITES) {
+            FavoritesScreen(navController, productViewModel)
+        }
+
+
+
+
+
 
         composable(ROUT_SPLASH) {
             SplashScreen(navController)
@@ -137,6 +149,9 @@ fun AppNavHost(
         composable(ROUT_ANKLETS) {
             AnkletsScreen(navController)
         }
+
+
+
 
 
 
@@ -185,7 +200,35 @@ fun AppNavHost(
         }
 
 
+        //CONTACT
+
+        // Initialize Contact Database and ViewModel
+        val contactDatabase = ContactDatabase.getDatabase(context)
+        val contactRepository = ContactRepository(contactDatabase.contactDao())
+        val contactViewModel = ContactViewModel(contactRepository)
+
+        composable(ROUT_UPLOAD_CONTACT) {
+            UploadContactScreen(navController, contactViewModel)
+        }
+        composable(ROUT_VIEW_CONTACT) {
+            ViewContactScreen(navController, contactViewModel) { id ->
+                navController.navigate("upload_contact?id=$id")
+            }
+        }
+
+
+
+
+
+
+
+
+
     }
+
+
+
+
 }
 
 

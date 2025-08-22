@@ -24,6 +24,7 @@ import com.kunji.mijawharati.R
 import com.kunji.mijawharati.navigation.ROUT_ADD_PRODUCT
 import com.kunji.mijawharati.navigation.ROUT_EDIT_PRODUCT
 import com.kunji.mijawharati.navigation.ROUT_PRODUCT_LIST
+import com.kunji.mijawharati.navigation.ROUT_VIEW_CONTACT
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -125,7 +126,7 @@ fun AdminDashboardScreen(navController: NavController) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(29.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             // Admin Functions Section
             Text(
@@ -134,7 +135,7 @@ fun AdminDashboardScreen(navController: NavController) {
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp
                 ),
-                modifier = Modifier.padding(bottom = 12.dp)
+                modifier = Modifier.padding(bottom = 5.dp)
             )
 
             TaskCard(
@@ -153,12 +154,24 @@ fun AdminDashboardScreen(navController: NavController) {
                 navController.navigate(ROUT_PRODUCT_LIST)
             }
 
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = "Messages from users",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp
+                ),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+
             TaskCard(
-                title = "Edit Product",
+                title = "User Messages",
                 subtitle = "Update or modify existing products",
                 color = Color(0xFFFF5722)
             ) {
-                navController.navigate(ROUT_EDIT_PRODUCT)
+                navController.navigate(ROUT_VIEW_CONTACT)
             }
         }
     }

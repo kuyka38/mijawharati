@@ -84,5 +84,7 @@ dependencies {
 
     implementation("androidx.compose.foundation:foundation:1.5.0") // or latest
 
+    implementation("com.google.maps.android:maps-compose:4.4.1")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
 
 }
