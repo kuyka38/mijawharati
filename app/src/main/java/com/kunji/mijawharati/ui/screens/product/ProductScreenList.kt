@@ -1,5 +1,6 @@
 package com.kunji.mijawharati.ui.screens.products
 
+import android.app.Application
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -40,10 +41,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.model.Product
@@ -84,18 +87,6 @@ fun ProductScreen(navController: NavController, viewModel: ProductViewModel) {
                                 tint = CreamWhite
                             )
                         }
-                        DropdownMenu(
-                            expanded = showMenu,
-                            onDismissRequest = { showMenu = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Product List") },
-                                onClick = {
-                                    navController.navigate(ROUT_PRODUCT_LIST)
-                                    showMenu = false
-                                }
-                            )
-                        }
                     }
                 )
 
@@ -114,13 +105,7 @@ fun ProductScreen(navController: NavController, viewModel: ProductViewModel) {
                             contentDescription = "Search",
                             tint = EmeraldGreen
                         )
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = EmeraldGreen,
-                        unfocusedBorderColor = EmeraldGreen.copy(alpha = 0.5f),
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.DarkGray
-                    )
+                    }
                 )
             }
         },
@@ -150,7 +135,6 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
         model = product.imagePath?.let { Uri.parse(it) } ?: Uri.EMPTY
     )
     val context = LocalContext.current
-    var isFavorite by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -206,7 +190,6 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // "Message Seller" button
                     Button(
                         onClick = {
                             val smsIntent = Intent(Intent.ACTION_SENDTO)
@@ -218,8 +201,7 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                             context.startActivity(smsIntent)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                        shape = RoundedCornerShape(20.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
+                        shape = RoundedCornerShape(20.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Send,
@@ -231,10 +213,7 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                         Text("Message", color = CreamWhite, fontSize = 14.sp)
                     }
 
-                    // Download PDF button
-                    IconButton(
-                        onClick = { generateProductPDF(context, product) }
-                    ) {
+                    IconButton(onClick = { generateProductPDF(context, product) }) {
                         Icon(
                             painter = painterResource(R.drawable.download),
                             contentDescription = "Download PDF",
@@ -244,23 +223,60 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                 }
             }
 
-            // Favorite Button (Top-Right)
+            // ✅ Favorite Button updates Room database
             IconButton(
-                onClick = { isFavorite = !isFavorite },
+                onClick = { viewModel.toggleFavorite(product) },
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(6.dp)
                     .background(Color.White.copy(alpha = 0.7f), shape = RoundedCornerShape(50))
             ) {
                 Icon(
-                    imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    imageVector = if (product.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = "Favorite",
-                    tint = if (isFavorite) Color.Red else EmeraldGreen
+                    tint = if (product.isFavorite) Color.Red else EmeraldGreen
                 )
             }
         }
     }
 }
+
+
+
+@Composable
+fun BottomNavigationBar1(navController: NavController) {
+    NavigationBar(
+        containerColor = EmeraldGreen,
+        contentColor = CreamWhite
+    ) {
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate(ROUT_PRODUCT_LIST) },
+            icon = { Icon(Icons.Default.Home, contentDescription = "Product List", tint = CreamWhite) },
+            label = { Text("Home", color = CreamWhite) }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate(ROUT_FAVORITES) },
+            icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites", tint = CreamWhite) },
+            label = { Text("Favorites", color = CreamWhite) }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate(ROUT_CART) },
+            icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Cart", tint = CreamWhite) },
+            label = { Text("Cart", color = CreamWhite) }
+        )
+        NavigationBarItem(
+            selected = false,
+            onClick = { navController.navigate(ROUT_PROFILE) },
+            icon = { Icon(Icons.Default.Person, contentDescription = "Profile", tint = CreamWhite) },
+            label = { Text("Profile", color = CreamWhite) }
+        )
+    }
+}
+
+
 
 @RequiresApi(Build.VERSION_CODES.Q)
 fun generateProductPDF(context: Context, product: Product) {
@@ -299,6 +315,7 @@ fun generateProductPDF(context: Context, product: Product) {
 
     pdfDocument.finishPage(page)
 
+    // Save PDF using MediaStore (Scoped Storage)
     val fileName = "${product.name}_Details.pdf"
     val contentValues = ContentValues().apply {
         put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
@@ -328,35 +345,3 @@ fun generateProductPDF(context: Context, product: Product) {
     pdfDocument.close()
 }
 
-@Composable
-fun BottomNavigationBar1(navController: NavController) {
-    NavigationBar(
-        containerColor = EmeraldGreen,
-        contentColor = CreamWhite
-    ) {
-        NavigationBarItem(
-            selected = false,
-            onClick = { navController.navigate(ROUT_PRODUCT_LIST) },
-            icon = { Icon(Icons.Default.Home, contentDescription = "Product List", tint = CreamWhite) },
-            label = { Text("Home", color = CreamWhite) }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { navController.navigate(ROUT_FAVORITES) },
-            icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites", tint = CreamWhite) },
-            label = { Text("Favorites", color = CreamWhite) }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { navController.navigate(ROUT_CART) },
-            icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Cart", tint = CreamWhite) },
-            label = { Text("Cart", color = CreamWhite) }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = { navController.navigate(ROUT_PROFILE) },
-            icon = { Icon(Icons.Default.Person, contentDescription = "Profile", tint = CreamWhite) },
-            label = { Text("Profile", color = CreamWhite) }
-        )
-    }
-}

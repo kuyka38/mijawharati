@@ -82,3 +82,4 @@ class ProductViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 }
+

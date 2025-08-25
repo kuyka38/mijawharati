@@ -37,6 +37,7 @@ import com.kunji.mijawharati.ui.screens.onboarding.OnboardingScreen
 import com.kunji.mijawharati.ui.screens.picture.PictureScreen
 import com.kunji.mijawharati.ui.screens.products.AddProductScreen
 import com.kunji.mijawharati.ui.screens.products.EditProductScreen
+import com.kunji.mijawharati.ui.screens.products.FavouriteScreen
 import com.kunji.mijawharati.ui.theme.screens.contact.UploadContactScreen
 import com.kunji.mijawharati.ui.theme.screens.contact.ViewContactScreen
 import com.kunji.mijawharati.viewmodel.ContactViewModel
@@ -138,6 +139,16 @@ fun AppNavHost(
         composable(ROUT_PROFILE) {
             ProfileScreen(navController)
         }
+
+        composable(ROUT_FAVORITES) {
+            FavouriteScreen(navController,productViewModel)
+        }
+
+
+
+
+
+
 
 
 

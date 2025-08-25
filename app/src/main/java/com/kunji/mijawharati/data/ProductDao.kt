@@ -13,7 +13,7 @@ interface ProductDao {
     fun getFavoriteProducts(): LiveData<List<Product>>
 
     @Insert
-    suspend fun insertProduct(product: Product)
+    suspend fun insertProduct(product: com.kunji.mijawharati.model.Product)
 
     @Update
     suspend fun updateProduct(product: Product)
