@@ -41,12 +41,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.model.Product
@@ -182,14 +180,15 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Buttons Row
-                Row(
+                // Buttons Column (Message + Add to Cart + Download)
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 6.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    // ✅ Message Seller Button
                     Button(
                         onClick = {
                             val smsIntent = Intent(Intent.ACTION_SENDTO)
@@ -201,7 +200,8 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                             context.startActivity(smsIntent)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                        shape = RoundedCornerShape(20.dp)
+                        shape = RoundedCornerShape(20.dp),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
                             imageVector = Icons.Default.Send,
@@ -210,9 +210,27 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Message", color = CreamWhite, fontSize = 14.sp)
+                        Text("Message Seller", color = CreamWhite, fontSize = 14.sp)
                     }
 
+                    // ✅ Add to Cart Button
+                    Button(
+                        onClick = {  },
+                        colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                        shape = RoundedCornerShape(20.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ShoppingCart,
+                            contentDescription = "Add to Cart",
+                            tint = CreamWhite,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Add to Cart", color = CreamWhite, fontSize = 14.sp)
+                    }
+
+                    // ✅ Download PDF Button
                     IconButton(onClick = { generateProductPDF(context, product) }) {
                         Icon(
                             painter = painterResource(R.drawable.download),
@@ -240,8 +258,6 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
         }
     }
 }
-
-
 
 @Composable
 fun BottomNavigationBar1(navController: NavController) {
@@ -275,8 +291,6 @@ fun BottomNavigationBar1(navController: NavController) {
         )
     }
 }
-
-
 
 @RequiresApi(Build.VERSION_CODES.Q)
 fun generateProductPDF(context: Context, product: Product) {
@@ -315,7 +329,6 @@ fun generateProductPDF(context: Context, product: Product) {
 
     pdfDocument.finishPage(page)
 
-    // Save PDF using MediaStore (Scoped Storage)
     val fileName = "${product.name}_Details.pdf"
     val contentValues = ContentValues().apply {
         put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
@@ -344,4 +357,3 @@ fun generateProductPDF(context: Context, product: Product) {
 
     pdfDocument.close()
 }
-
