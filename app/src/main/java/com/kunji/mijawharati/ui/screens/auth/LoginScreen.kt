@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.kunji.mijawharati.R
-import com.kunji.mijawharati.navigation.ROUT_HOME
 import com.kunji.mijawharati.navigation.ROUT_PICTURE
 import com.kunji.mijawharati.navigation.ROUT_REGISTER
 import com.kunji.mijawharati.ui.theme.EmeraldGreen

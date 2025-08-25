@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.navigation.ROUT_FAVORITES
 import com.kunji.mijawharati.navigation.ROUT_LANDING
+import com.kunji.mijawharati.navigation.ROUT_PROFILE
 import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 
@@ -121,19 +123,6 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel = view
                 )
 
                 NavigationBarItem(
-                    selected = true, // current screen
-                    onClick = { /* Already in Cart */ },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.ShoppingCart,
-                            contentDescription = "Cart",
-                            tint = CreamWhite
-                        )
-                    },
-                    label = { Text("Cart", color = CreamWhite) }
-                )
-
-                NavigationBarItem(
                     selected = false,
                     onClick = {
                         navController.navigate(ROUT_FAVORITES) {
@@ -149,6 +138,60 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel = view
                     },
                     label = { Text("Favorites", color = CreamWhite) }
                 )
+
+
+
+
+
+
+
+                NavigationBarItem(
+                    selected = true, // current screen
+                    onClick = { /* Already in Cart */ },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.ShoppingCart,
+                            contentDescription = "Cart",
+                            tint = CreamWhite
+                        )
+                    },
+                    label = { Text("Cart", color = CreamWhite) }
+                )
+
+
+
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = {
+                        navController.navigate(ROUT_PROFILE) {
+                            popUpTo(ROUT_PROFILE) { inclusive = true }
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Person,
+                            contentDescription = "Profile",
+                            tint = CreamWhite
+                        )
+                    },
+                    label = { Text("Profile", color = CreamWhite) }
+                )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
         }
     ) { padding ->

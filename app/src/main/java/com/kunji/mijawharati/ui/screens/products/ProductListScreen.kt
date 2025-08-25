@@ -1,19 +1,11 @@
-package com.kunji.mijawharati.ui.screens.products
+package com.kunji.swaggy.ui.screens.products
 
-import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
-import android.provider.MediaStore
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,18 +19,17 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.kunji.mijawharati.R
 import com.kunji.mijawharati.model.Product
 import com.kunji.mijawharati.navigation.ROUT_ADD_PRODUCT
 import com.kunji.mijawharati.navigation.ROUT_EDIT_PRODUCT
@@ -47,8 +38,6 @@ import com.kunji.mijawharati.navigation.editProductRoute
 import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 import com.kunji.mijawharati.viewmodel.ProductViewModel
-import java.io.IOException
-import java.io.OutputStream
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +55,13 @@ fun ProductListScreen(navController: NavController, viewModel: ProductViewModel)
         topBar = {
             Column {
                 TopAppBar(
-                    title = { Text("Products", fontSize = 20.sp, color = CreamWhite) },
+                    title = {
+                        Text(
+                            "Products",
+                            fontSize = 20.sp,
+                            color = CreamWhite
+                        )
+                    },
                     colors = TopAppBarDefaults.mediumTopAppBarColors(
                         containerColor = EmeraldGreen
                     ),
@@ -100,6 +95,7 @@ fun ProductListScreen(navController: NavController, viewModel: ProductViewModel)
                     }
                 )
 
+                // Search Bar
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
@@ -117,30 +113,30 @@ fun ProductListScreen(navController: NavController, viewModel: ProductViewModel)
                     },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = EmeraldGreen,
-                        unfocusedBorderColor = EmeraldGreen.copy(alpha = 0.6f),
-                        focusedTextColor = EmeraldGreen,
-                        unfocusedTextColor = EmeraldGreen
+                        unfocusedBorderColor = Color.Gray,
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.DarkGray
                     )
                 )
             }
         },
-        bottomBar = { BottomNavigationBar1(navController) }
+        bottomBar = { BottomNavigationBar2(navController) },
+        containerColor = CreamWhite
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(8.dp)
+                .padding(12.dp)
         ) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxSize()
             ) {
                 items(filteredProducts) { product ->
-                    ProductItem(navController, product, viewModel)
+                    ProductItem1(navController, product, viewModel)
                 }
             }
         }
@@ -149,7 +145,7 @@ fun ProductListScreen(navController: NavController, viewModel: ProductViewModel)
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun ProductItem(navController: NavController, product: Product, viewModel: ProductViewModel) {
+fun ProductItem1(navController: NavController, product: Product, viewModel: ProductViewModel) {
     val painter: Painter = rememberAsyncImagePainter(
         model = product.imagePath?.let { Uri.parse(it) } ?: Uri.EMPTY
     )
@@ -158,29 +154,40 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp)
             .clickable {
                 if (product.id != 0) {
                     navController.navigate(ROUT_EDIT_PRODUCT)
                 }
             },
         shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = CreamWhite),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Product Image at the top
-            Image(
-                painter = painter,
-                contentDescription = "Product Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                contentScale = ContentScale.Crop
-            )
+            // Product Image
+            Box(modifier = Modifier.height(150.dp)) {
+                Image(
+                    painter = painter,
+                    contentDescription = "Product Image",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
 
-            // Product Info below the image
+                // Gradient Overlay
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(Color.Transparent, EmeraldGreen.copy(alpha = 0.6f))
+                            )
+                        )
+                )
+            }
+
+            // Product Info
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -190,26 +197,23 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                     text = product.name,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = EmeraldGreen
                 )
                 Text(
                     text = "Price: Ksh${product.price}",
                     fontSize = 14.sp,
-                    color = Color.DarkGray
+                    color = Color.Black
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Edit, Delete, Download icons in one row
+                // Icons Row (Edit & Delete)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement = Arrangement.End
                 ) {
                     IconButton(
-                        onClick = {
-                            navController.navigate(editProductRoute(product.id))
-                        }
+                        onClick = { navController.navigate(editProductRoute(product.id)) }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
@@ -227,21 +231,9 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                             tint = Color.Red
                         )
                     }
-
-                    IconButton(
-                        onClick = { generateProductPDF(context, product) }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.download),
-                            contentDescription = "Download PDF",
-                            tint = EmeraldGreen
-                        )
-                    }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Message Seller button below icons with Emerald Green
+                // Message Seller button BELOW the icons
                 OutlinedButton(
                     onClick = {
                         val smsIntent = Intent(Intent.ACTION_SENDTO)
@@ -250,96 +242,21 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
                         context.startActivity(smsIntent)
                     },
                     shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = EmeraldGreen
                     ),
-                    border = BorderStroke(1.dp, EmeraldGreen)
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Send,
-                        contentDescription = "Message Seller",
-                        tint = EmeraldGreen
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "Message Seller",
-                        color = EmeraldGreen
-                    )
+                    Text("Message Seller", color = EmeraldGreen, fontSize = 12.sp)
                 }
             }
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.Q)
-fun generateProductPDF(context: Context, product: Product) {
-    val pdfDocument = PdfDocument()
-    val pageInfo = PdfDocument.PageInfo.Builder(300, 500, 1).create()
-    val page = pdfDocument.startPage(pageInfo)
-    val canvas = page.canvas
-    val paint = android.graphics.Paint()
-
-    val bitmap: Bitmap? = try {
-        product.imagePath?.let {
-            val uri = Uri.parse(it)
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                BitmapFactory.decodeStream(inputStream)
-            }
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
-
-    bitmap?.let {
-        val scaledBitmap = Bitmap.createScaledBitmap(it, 250, 150, false)
-        canvas.drawBitmap(scaledBitmap, 25f, 20f, paint)
-    }
-
-    paint.textSize = 16f
-    paint.isFakeBoldText = true
-    canvas.drawText("Product Details", 80f, 200f, paint)
-
-    paint.textSize = 12f
-    paint.isFakeBoldText = false
-    canvas.drawText("Name: ${product.name}", 50f, 230f, paint)
-    canvas.drawText("Price: Ksh${product.price}", 50f, 250f, paint)
-    canvas.drawText("Seller Phone: ${product.phone}", 50f, 270f, paint)
-
-    pdfDocument.finishPage(page)
-
-    val fileName = "${product.name}_Details.pdf"
-    val contentValues = ContentValues().apply {
-        put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-        put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
-        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-    }
-
-    val contentResolver = context.contentResolver
-    val uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-
-    if (uri != null) {
-        try {
-            val outputStream: OutputStream? = contentResolver.openOutputStream(uri)
-            if (outputStream != null) {
-                pdfDocument.writeTo(outputStream)
-                Toast.makeText(context, "PDF saved to Downloads!", Toast.LENGTH_LONG).show()
-            }
-            outputStream?.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Toast.makeText(context, "Failed to save PDF!", Toast.LENGTH_LONG).show()
-        }
-    } else {
-        Toast.makeText(context, "Failed to create file!", Toast.LENGTH_LONG).show()
-    }
-
-    pdfDocument.close()
-}
-
+// ✅ Bottom Navigation Bar with Emerald Green + CreamWhite
 @Composable
-fun BottomNavigationBar1(navController: NavController) {
+fun BottomNavigationBar2(navController: NavController) {
     NavigationBar(
         containerColor = EmeraldGreen,
         contentColor = CreamWhite
@@ -347,25 +264,13 @@ fun BottomNavigationBar1(navController: NavController) {
         NavigationBarItem(
             selected = false,
             onClick = { navController.navigate(ROUT_PRODUCT_LIST) },
-            icon = {
-                Icon(
-                    Icons.Default.Home,
-                    contentDescription = "Product List",
-                    tint = CreamWhite
-                )
-            },
+            icon = { Icon(Icons.Default.Home, contentDescription = "Product List", tint = CreamWhite) },
             label = { Text("Home", color = CreamWhite) }
         )
         NavigationBarItem(
             selected = false,
             onClick = { navController.navigate(ROUT_ADD_PRODUCT) },
-            icon = {
-                Icon(
-                    Icons.Default.AddCircle,
-                    contentDescription = "Add Product",
-                    tint = CreamWhite
-                )
-            },
+            icon = { Icon(Icons.Default.AddCircle, contentDescription = "Add Product", tint = CreamWhite) },
             label = { Text("Add", color = CreamWhite) }
         )
     }

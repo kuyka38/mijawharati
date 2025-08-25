@@ -26,7 +26,6 @@ import com.kunji.mijawharati.ui.screens.ladies.SplashScreen
 import com.kunji.mijawharati.viewmodel.AuthViewModel
 import com.kunji.mijawharati.ui.screens.auth.RegisterScreen
 import com.kunji.mijawharati.ui.screens.cart.CartScreen
-import com.kunji.mijawharati.ui.screens.favorites.FavoritesScreen
 import com.kunji.mijawharati.ui.screens.items.AnkletsScreen
 import com.kunji.mijawharati.ui.screens.items.BraceletsScreen
 import com.kunji.mijawharati.ui.screens.items.EarringsScreen
@@ -38,16 +37,13 @@ import com.kunji.mijawharati.ui.screens.onboarding.OnboardingScreen
 import com.kunji.mijawharati.ui.screens.picture.PictureScreen
 import com.kunji.mijawharati.ui.screens.products.AddProductScreen
 import com.kunji.mijawharati.ui.screens.products.EditProductScreen
-import com.kunji.mijawharati.ui.screens.products.FavoritesViewModel
-import com.kunji.mijawharati.ui.screens.products.ProductScreenList
-
 import com.kunji.mijawharati.ui.theme.screens.contact.UploadContactScreen
 import com.kunji.mijawharati.ui.theme.screens.contact.ViewContactScreen
 import com.kunji.mijawharati.viewmodel.ContactViewModel
-
-
 import com.kunji.mijawharati.viewmodel.ProductViewModel
-import com.kunji.mijawharati.ui.screens.products.ProductListScreen
+import com.kunji.mijawharati.ui.screens.profile.ProfileScreen
+import com.kunji.mijawharati.ui.screens.products.ProductScreen
+import com.kunji.swaggy.ui.screens.products.ProductListScreen
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -57,7 +53,6 @@ fun AppNavHost(
     navController: NavHostController = rememberNavController(),
     startDestination: String = ROUT_PRODUCT_SCREEN_LIST,
     productViewModel: ProductViewModel = viewModel(),
-    favouritesViewModel: FavoritesViewModel = viewModel(),
 
     ) {
 
@@ -95,18 +90,8 @@ fun AppNavHost(
         }
 
         composable(ROUT_PRODUCT_SCREEN_LIST) {
-            val favoritesViewModel: FavoritesViewModel = viewModel()
-            ProductScreenList(navController, productViewModel, favoritesViewModel)
+            ProductScreen(navController, productViewModel)
         }
-
-
-
-        composable(ROUT_FAVORITES) {
-            FavoritesScreen(navController, productViewModel)
-        }
-
-
-
 
 
 
@@ -149,6 +134,12 @@ fun AppNavHost(
         composable(ROUT_ANKLETS) {
             AnkletsScreen(navController)
         }
+
+        composable(ROUT_PROFILE) {
+            ProfileScreen(navController)
+        }
+
+
 
 
 

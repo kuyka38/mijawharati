@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.kunji.mijawharati.model.Product
 import com.kunji.mijawharati.model.User
 
-@Database(entities = [Product::class, User::class], version = 4, exportSchema = false)
+@Database(entities = [Product::class, User::class], version = 5, exportSchema = false)
 abstract class ProductDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun userDao(): UserDao

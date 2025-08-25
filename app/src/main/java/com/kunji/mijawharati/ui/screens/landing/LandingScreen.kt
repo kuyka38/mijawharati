@@ -64,6 +64,7 @@ import com.kunji.mijawharati.navigation.ROUT_EARRINGS
 import com.kunji.mijawharati.navigation.ROUT_FAVORITES
 import com.kunji.mijawharati.navigation.ROUT_NECKLACES
 import com.kunji.mijawharati.navigation.ROUT_PRODUCT_SCREEN_LIST
+import com.kunji.mijawharati.navigation.ROUT_PROFILE
 import com.kunji.mijawharati.navigation.ROUT_RINGS
 import com.kunji.mijawharati.navigation.ROUT_UPLOAD_CONTACT
 import com.kunji.mijawharati.navigation.ROUT_WATCHES
@@ -294,6 +295,24 @@ fun LandingScreen(navController: NavController) {
                             )
                             Text("Cart", color = CreamWhite, fontSize = 12.sp)
                         }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.clickable {
+                                navController.navigate(ROUT_PROFILE)
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.Person,
+                                contentDescription = "Profile",
+                                tint = CreamWhite
+                            )
+                            Text("Profile", color = CreamWhite, fontSize = 12.sp)
+                        }
+
+
+
+
+
                     }
                 }
             }
@@ -404,6 +423,7 @@ fun LandingScreen(navController: NavController) {
                 Text(
                     text = "Delicate, timeless, and effortlessly chic — our upcoming Korean Collection is your next jewellery obsession.",
                     style = MaterialTheme.typography.bodyMedium,
+                    fontSize = 16.sp,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
                 )
 
@@ -418,7 +438,7 @@ fun LandingScreen(navController: NavController) {
                     Image(
                         painter = painterResource(id = R.drawable.add),
                         contentDescription = "Centered Image",
-                        modifier = Modifier.size(650.dp)
+                        modifier = Modifier.size(1200.dp)
                     )
                 }
 
@@ -426,7 +446,7 @@ fun LandingScreen(navController: NavController) {
 
                 Text(
                     text = "Find an everyday statement piece - simple but elegant",
-                    fontSize = 15.sp,
+                    fontSize = 16.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
                 )
