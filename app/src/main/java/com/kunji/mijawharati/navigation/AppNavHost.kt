@@ -52,7 +52,7 @@ import com.kunji.swaggy.ui.screens.products.ProductListScreen
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_PRODUCT_SCREEN_LIST,
+    startDestination: String = ROUT_SPLASH,
     productViewModel: ProductViewModel = viewModel(),
 
     ) {
@@ -145,19 +145,6 @@ fun AppNavHost(
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         //AUTHENTICATION
 
         // Initialize Room Database and Repository for Authentication
@@ -212,11 +199,16 @@ fun AppNavHost(
         composable(ROUT_UPLOAD_CONTACT) {
             UploadContactScreen(navController, contactViewModel)
         }
+
+
         composable(ROUT_VIEW_CONTACT) {
             ViewContactScreen(navController, contactViewModel) { id ->
                 navController.navigate("upload_contact?id=$id")
             }
         }
+
+
+
 
 
 

@@ -175,15 +175,7 @@ fun ProductItem1(navController: NavController, product: Product, viewModel: Prod
                 )
 
                 // Gradient Overlay
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .background(
-                            Brush.verticalGradient(
-                                colors = listOf(Color.Transparent, EmeraldGreen.copy(alpha = 0.6f))
-                            )
-                        )
-                )
+
             }
 
             // Product Info
@@ -257,6 +249,7 @@ fun ProductItem1(navController: NavController, product: Product, viewModel: Prod
 @Composable
 fun BottomNavigationBar2(navController: NavController) {
     NavigationBar(
+        modifier = Modifier.height(65.dp),
         containerColor = EmeraldGreen,
         contentColor = CreamWhite
     ) {
