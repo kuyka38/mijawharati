@@ -25,7 +25,6 @@ import com.kunji.mijawharati.ui.screens.admin.AdminDashboardScreen
 import com.kunji.mijawharati.ui.screens.ladies.SplashScreen
 import com.kunji.mijawharati.viewmodel.AuthViewModel
 import com.kunji.mijawharati.ui.screens.auth.RegisterScreen
-import com.kunji.mijawharati.ui.screens.cart.CartScreen
 import com.kunji.mijawharati.ui.screens.items.AnkletsScreen
 import com.kunji.mijawharati.ui.screens.items.BraceletsScreen
 import com.kunji.mijawharati.ui.screens.items.EarringsScreen
@@ -36,6 +35,7 @@ import com.kunji.mijawharati.ui.screens.landing.LandingScreen
 import com.kunji.mijawharati.ui.screens.onboarding.OnboardingScreen
 import com.kunji.mijawharati.ui.screens.picture.PictureScreen
 import com.kunji.mijawharati.ui.screens.products.AddProductScreen
+import com.kunji.mijawharati.ui.screens.products.CartScreen
 import com.kunji.mijawharati.ui.screens.products.EditProductScreen
 import com.kunji.mijawharati.ui.screens.products.FavouriteScreen
 import com.kunji.mijawharati.ui.theme.screens.contact.UploadContactScreen
@@ -52,7 +52,7 @@ import com.kunji.swaggy.ui.screens.products.ProductListScreen
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_PRODUCT_SCREEN_LIST,
+    startDestination: String = ROUT_CART,
     productViewModel: ProductViewModel = viewModel(),
 
     ) {
@@ -79,7 +79,7 @@ fun AppNavHost(
 
 
         composable(ROUT_CART) {
-            CartScreen(navController)
+            CartScreen(navController, productViewModel)
         }
 
         composable(ROUT_ONBOARDING) {

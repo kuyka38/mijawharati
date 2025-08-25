@@ -215,7 +215,7 @@ fun ProductItem(navController: NavController, product: Product, viewModel: Produ
 
                     // ✅ Add to Cart Button
                     Button(
-                        onClick = {  },
+                        onClick = {  viewModel.addToCart(product) },
                         colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
                         shape = RoundedCornerShape(20.dp),
                         modifier = Modifier.fillMaxWidth()
