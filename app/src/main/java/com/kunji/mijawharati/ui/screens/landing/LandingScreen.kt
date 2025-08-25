@@ -462,7 +462,7 @@ fun LandingScreen(navController: NavController) {
                     ),
                     shape = RoundedCornerShape(10.dp)
                 ) {
-                    Text("View More Products")
+                    Text("View All Products")
                 }
             }
         }

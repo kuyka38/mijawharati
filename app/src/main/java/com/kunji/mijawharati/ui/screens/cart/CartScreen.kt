@@ -7,10 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,7 +23,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.kunji.mijawharati.model.Product
+import com.kunji.mijawharati.navigation.ROUT_FAVORITES
+import com.kunji.mijawharati.navigation.ROUT_LANDING
 import com.kunji.mijawharati.navigation.ROUT_PRODUCT_SCREEN_LIST
+import com.kunji.mijawharati.navigation.ROUT_PROFILE
 import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 import com.kunji.mijawharati.viewmodel.ProductViewModel
@@ -36,8 +37,14 @@ fun CartScreen(navController: NavController, viewModel: ProductViewModel) {
     val mContext = LocalContext.current
     val cartProducts by viewModel.cartProducts.observeAsState(emptyList())
 
-    // ✅ FIX: price is Double, so just sum doubles
-    val totalPrice: Double = cartProducts.sumOf { it.price }
+    // Quantities map
+    var quantities by remember { mutableStateOf(mutableMapOf<Int, Int>()) }
+
+    // Calculate total dynamically
+    val totalPrice: Double = cartProducts.sumOf { product ->
+        val qty = quantities[product.id] ?: 1
+        product.price * qty
+    }
 
     Scaffold(
         topBar = {
@@ -57,40 +64,92 @@ fun CartScreen(navController: NavController, viewModel: ProductViewModel) {
         },
         containerColor = CreamWhite,
         bottomBar = {
-            if (cartProducts.isNotEmpty()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "Total:",
-                            fontSize = 14.sp,
-                            color = Color.Gray
-                        )
-                        Text(
-                            text = "Ksh${"%.2f".format(totalPrice)}",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = EmeraldGreen
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            val simToolKitLaunchIntent =
-                                mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                            simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
-                        shape = RoundedCornerShape(8.dp)
+            Column {
+                if (cartProducts.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Checkout", color = CreamWhite, fontSize = 16.sp)
+                        Column {
+                            Text("Total:", fontSize = 14.sp, color = Color.Gray)
+                            Text(
+                                text = "Ksh${"%.2f".format(totalPrice)}",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = EmeraldGreen
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                val simToolKitLaunchIntent =
+                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
+                                simToolKitLaunchIntent?.let { mContext.startActivity(it) }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen)
+                        ) {
+                            Text("Checkout", color = CreamWhite, fontSize = 16.sp)
+                        }
                     }
+                }
+
+                // Bottom Navigation
+                NavigationBar(containerColor = EmeraldGreen) {
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = { navController.navigate(ROUT_LANDING) },
+                        icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+                        label = { Text("Home") },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = CreamWhite,
+                            unselectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedTextColor = Color.White,
+                            indicatorColor = EmeraldGreen
+                        )
+                    )
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = { navController.navigate(ROUT_FAVORITES) },
+                        icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
+                        label = { Text("Favorites") },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = CreamWhite,
+                            unselectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedTextColor = Color.White,
+                            indicatorColor = EmeraldGreen
+                        )
+                    )
+                    NavigationBarItem(
+                        selected = true, // current screen
+                        onClick = { /* stay on cart */ },
+                        icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Cart") },
+                        label = { Text("Cart") },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = CreamWhite,
+                            unselectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedTextColor = Color.White,
+                            indicatorColor = EmeraldGreen
+                        )
+                    )
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = { navController.navigate(ROUT_PROFILE) },
+                        icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+                        label = { Text("Profile") },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = CreamWhite,
+                            unselectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedTextColor = Color.White,
+                            indicatorColor = EmeraldGreen
+                        )
+                    )
                 }
             }
         }
@@ -112,23 +171,18 @@ fun CartScreen(navController: NavController, viewModel: ProductViewModel) {
                     .padding(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Group products into pairs (2 per row)
-                items(cartProducts.chunked(2)) { rowProducts ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        rowProducts.forEach { product ->
-                            CartProductItem(
-                                product = product,
-                                onRemoveClick = { viewModel.removeFromCart(product) },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                        if (rowProducts.size == 1) {
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
-                    }
+                items(cartProducts) { product ->
+                    val qty = quantities[product.id] ?: 1
+                    CartProductItem(
+                        product = product,
+                        quantity = qty,
+                        onQuantityChange = { newQty ->
+                            quantities = quantities.toMutableMap().apply {
+                                this[product.id] = newQty
+                            }
+                        },
+                        onRemoveClick = { viewModel.removeFromCart(product) }
+                    )
                 }
             }
         }
@@ -138,57 +192,101 @@ fun CartScreen(navController: NavController, viewModel: ProductViewModel) {
 @Composable
 fun CartProductItem(
     product: Product,
+    quantity: Int,
+    onQuantityChange: (Int) -> Unit,
     onRemoveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
-            .height(220.dp) // ensure enough space for image + details
+            .fillMaxWidth()
+            .height(150.dp)
             .clickable { /* navigate to details if needed */ },
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(6.dp),
+        elevation = CardDefaults.cardElevation(2.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Image takes half of the card height
+            // Product Image
             Image(
                 painter = rememberAsyncImagePainter(model = Uri.parse(product.imagePath)),
                 contentDescription = "Product Image",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(Color.LightGray, RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
+                    .width(120.dp)
+                    .fillMaxHeight()
+                    .background(Color.LightGray),
                 contentScale = ContentScale.Crop
             )
 
-            // Product Info takes the other half
+            // Product Info
             Column(
                 modifier = Modifier
                     .weight(1f)
+                    .fillMaxHeight()
                     .padding(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
                     Text(
                         text = product.name,
-                        fontSize = 16.sp,
+                        fontSize = 19.sp,
                         fontWeight = FontWeight.Bold,
                         color = EmeraldGreen,
-                        maxLines = 1
+                        modifier = Modifier.weight(1f)
                     )
-                    Text(text = "Ksh${product.price}", fontSize = 14.sp, color = Color.Gray)
-                    Text(text = "Seller: ${product.phone}", fontSize = 12.sp, color = Color.DarkGray)
+                    IconButton(onClick = onRemoveClick) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Remove from cart",
+                            tint = EmeraldGreen
+                        )
+                    }
                 }
 
-                IconButton(onClick = onRemoveClick) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Remove from cart",
-                        tint = Color.Red
+                // Reduced space (was 4.dp before, now 2.dp)
+                Spacer(modifier = Modifier.height(0.dp))
+
+                // Price (quantity applied)
+                Text(
+                    text = "Ksh${"%.2f".format(product.price * quantity)}",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
+
+                // Quantity controls
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.padding(top = 6.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = { if (quantity > 1) onQuantityChange(quantity - 1) },
+                        modifier = Modifier.size(30.dp),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text("-", fontSize = 18.sp)
+                    }
+
+                    Text(
+                        text = quantity.toString(),
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(horizontal = 12.dp)
                     )
+
+                    OutlinedButton(
+                        onClick = { onQuantityChange(quantity + 1) },
+                        modifier = Modifier.size(30.dp),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text("+", fontSize = 18.sp)
+                    }
                 }
             }
         }
