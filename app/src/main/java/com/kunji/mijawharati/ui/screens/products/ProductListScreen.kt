@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.kunji.mijawharati.model.Product
 import com.kunji.mijawharati.navigation.ROUT_ADD_PRODUCT
+import com.kunji.mijawharati.navigation.ROUT_ADMINDASHBOARD
 import com.kunji.mijawharati.navigation.ROUT_EDIT_PRODUCT
 import com.kunji.mijawharati.navigation.ROUT_PRODUCT_LIST
 import com.kunji.mijawharati.navigation.editProductRoute
@@ -249,13 +250,13 @@ fun ProductItem1(navController: NavController, product: Product, viewModel: Prod
 @Composable
 fun BottomNavigationBar2(navController: NavController) {
     NavigationBar(
-        modifier = Modifier.height(65.dp),
+        modifier = Modifier.height(80.dp),
         containerColor = EmeraldGreen,
         contentColor = CreamWhite
     ) {
         NavigationBarItem(
             selected = false,
-            onClick = { navController.navigate(ROUT_PRODUCT_LIST) },
+            onClick = { navController.navigate(ROUT_ADMINDASHBOARD) },
             icon = { Icon(Icons.Default.Home, contentDescription = "Product List", tint = CreamWhite) },
             label = { Text("Home", color = CreamWhite) }
         )

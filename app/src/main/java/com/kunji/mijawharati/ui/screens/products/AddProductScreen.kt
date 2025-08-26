@@ -32,11 +32,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.navigation.ROUT_ADD_PRODUCT
 import com.kunji.mijawharati.navigation.ROUT_PRODUCT_LIST
+import com.kunji.mijawharati.ui.theme.CreamWhite
+import com.kunji.mijawharati.ui.theme.EmeraldGreen
 import com.kunji.mijawharati.viewmodel.ProductViewModel
-
-// Theme Colors
-private val EmeraldGreen = Color(0xFF006A4E)
-private val CreamWhite = Color(0xFFFCFCF7)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,21 +58,28 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
             TopAppBar(
                 title = {
                     Text(
-                        "Upload a Product",
+                        "Upload Products",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
-                        color = EmeraldGreen
+                        color = CreamWhite
                     )
                 },
-                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = CreamWhite),
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = EmeraldGreen,
+                    titleContentColor = CreamWhite
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Back", tint = EmeraldGreen)
+                        Icon(
+                            Icons.Default.KeyboardArrowLeft,
+                            contentDescription = "Back",
+                            tint = CreamWhite
+                        )
                     }
                 },
                 actions = {
                     IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Menu", tint = EmeraldGreen)
+                        Icon(Icons.Default.MoreVert, contentDescription = "Menu", tint = CreamWhite)
                     }
                     DropdownMenu(
                         expanded = showMenu,
@@ -147,7 +152,7 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
                             color = EmeraldGreen.copy(alpha = 0.4f),
                             shape = RoundedCornerShape(16.dp)
                         )
-                        .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp))
+
                         .clickable { imagePicker.launch("image/*") },
                     contentAlignment = Alignment.Center
                 ) {
@@ -166,7 +171,7 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
                                 tint = EmeraldGreen.copy(alpha = 0.8f),
                                 modifier = Modifier.size(50.dp)
                             )
-                            Text("Tap to pick image", color = EmeraldGreen, fontWeight = FontWeight.Medium)
+                            Text("Select image", color = EmeraldGreen, fontWeight = FontWeight.Medium)
                         }
                     }
                 }
@@ -187,7 +192,7 @@ fun AddProductScreen(navController: NavController, viewModel: ProductViewModel) 
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen)
                 ) {
-                    Text("Add Product", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text("Upload Product", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
                 }
             }
         }
@@ -210,7 +215,7 @@ fun SimpleTextField(value: String, onValueChange: (String) -> Unit, label: Strin
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White, shape = RoundedCornerShape(12.dp))
-            .shadow(elevation = 3.dp, shape = RoundedCornerShape(12.dp))
+            .shadow(elevation = 0.dp, shape = RoundedCornerShape(2.dp))
     )
 }
 

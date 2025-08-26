@@ -6,21 +6,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.kunji.mijawharati.R
 import com.kunji.mijawharati.model.Contact
-import com.kunji.mijawharati.navigation.ROUT_CART
-import com.kunji.mijawharati.navigation.ROUT_FAVORITES
-import com.kunji.mijawharati.navigation.ROUT_HOME
 import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.ui.theme.EmeraldGreen
 import com.kunji.mijawharati.viewmodel.ContactViewModel
@@ -63,7 +60,11 @@ fun UploadContactScreen(
                 title = { Text("Contact us", color = CreamWhite) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = CreamWhite)
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = CreamWhite
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -165,6 +166,16 @@ fun UploadContactScreen(
                     ) {
                         Text(if (editingContact != null) "Update Contact" else "Submit")
                     }
+
+                    // ✅ Static confirmation message always below the button
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        text = "You will receive a response E-mail in the next 24 hours",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Light,
+                        color = Color.White,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
                 }
             }
         }

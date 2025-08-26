@@ -62,7 +62,7 @@ fun AdminDashboardScreen(navController: NavController) {
             ) {
                 Column {
                     Text(
-                        text = "Hey Kuyka ",
+                        text = "Hey Admin... ",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Medium,
                             fontSize = 30.sp
@@ -91,12 +91,12 @@ fun AdminDashboardScreen(navController: NavController) {
             Text(
                 text = "Different Suppliers",
                 style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 20.sp
-                )
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp
+                ),
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             // Supplier Cards (Horizontal Scroll)
             LazyRow(
@@ -107,21 +107,21 @@ fun AdminDashboardScreen(navController: NavController) {
                     FeatureCard(
                         imageRes = R.drawable.img_25,
                         url = "https://www.alibaba.com/",
-                        modifier = Modifier.width(180.dp)
+                        modifier = Modifier.width(170.dp)
                     )
                 }
                 item {
                     FeatureCard(
                         imageRes = R.drawable.img_26,
                         url = "https://www.aliexpress.com/",
-                        modifier = Modifier.width(180.dp)
+                        modifier = Modifier.width(170.dp)
                     )
                 }
                 item {
                     FeatureCard(
                         imageRes = R.drawable.img_27,
                         url = "https://www.amazon.com/",
-                        modifier = Modifier.width(180.dp)
+                        modifier = Modifier.width(170.dp)
                     )
                 }
             }
