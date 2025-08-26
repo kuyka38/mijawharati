@@ -101,7 +101,7 @@ fun LoginScreen(
 
                     Text(
                         text = "Login",
-                        fontSize = 29.sp,
+                        fontSize = 26.sp,
                         color = EmeraldGreen
 
                     )

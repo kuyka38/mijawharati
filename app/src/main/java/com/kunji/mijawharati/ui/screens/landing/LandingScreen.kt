@@ -1,6 +1,8 @@
 package com.kunji.mijawharati.ui.screens.landing
 
 import android.content.Intent
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -50,7 +52,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -110,7 +111,7 @@ fun ProductGrid(navController: NavController) {
                             "Necklaces" -> navController.navigate(ROUT_NECKLACES)
                             "Bracelets" -> navController.navigate(ROUT_BRACELETS)
                             "Rings" -> navController.navigate(ROUT_RINGS)
-                            "Earings" -> navController.navigate(ROUT_EARRINGS)
+                            "Earrings" -> navController.navigate(ROUT_EARRINGS)
                             "Watches" -> navController.navigate(ROUT_WATCHES)
                             "Anklets" -> navController.navigate(ROUT_ANKLETS)
                         }
@@ -137,7 +138,7 @@ fun ProductGrid(navController: NavController) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun LandingScreen(navController: NavController) {
 
@@ -280,8 +281,6 @@ fun LandingScreen(navController: NavController) {
                             Text("Home", color = CreamWhite, fontSize = 12.sp)
                         }
 
-
-
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.clickable {
@@ -295,10 +294,6 @@ fun LandingScreen(navController: NavController) {
                             )
                             Text("Favorites", color = CreamWhite, fontSize = 12.sp)
                         }
-
-
-
-
 
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -326,11 +321,6 @@ fun LandingScreen(navController: NavController) {
                             )
                             Text("Profile", color = CreamWhite, fontSize = 12.sp)
                         }
-
-
-
-
-
                     }
                 }
             }
@@ -342,17 +332,6 @@ fun LandingScreen(navController: NavController) {
                     .verticalScroll(rememberScrollState())
                     .background(CreamWhite)
             ) {
-                // Carousel logic
-                val carouselImages = listOf(R.drawable.landing, R.drawable.landing, R.drawable.landing)
-                var currentImageIndex by remember { mutableStateOf(0) }
-
-                LaunchedEffect(Unit) {
-                    while (true) {
-                        delay(1000)
-                        currentImageIndex = (currentImageIndex + 1) % carouselImages.size
-                    }
-                }
-
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Image(
@@ -369,19 +348,35 @@ fun LandingScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Text(
-                    text = "Shop by Categories",
+                    text = "Shop by Category",
                     fontSize = 23.sp,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
                 )
 
-                // Insert Grid here
                 ProductGrid(navController)
+
+
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Button(
+                    onClick = { navController.navigate(ROUT_PRODUCT_SCREEN_LIST) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black.copy(alpha = 0.9f), // 🔹 50% transparent
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text("View All Products")
+                }
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Unique  Pieces",
+                    text = "Timeless Designs",
                     fontSize = 23.sp,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 15.dp, bottom = 8.dp)
@@ -399,7 +394,7 @@ fun LandingScreen(navController: NavController) {
                         contentDescription = "Korean Necklace",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .width(280.dp)
+                            .width(200.dp)
                             .height(180.dp)
                             .clip(RoundedCornerShape(10.dp))
                     )
@@ -408,7 +403,7 @@ fun LandingScreen(navController: NavController) {
                         contentDescription = "Korean Earring",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .width(280.dp)
+                            .width(200.dp)
                             .height(180.dp)
                             .clip(RoundedCornerShape(10.dp))
                     )
@@ -417,23 +412,10 @@ fun LandingScreen(navController: NavController) {
                         contentDescription = "Korean Pendant",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .width(280.dp)
+                            .width(200.dp)
                             .height(180.dp)
                             .clip(RoundedCornerShape(10.dp))
                     )
-
-                    Image(
-                        painter = painterResource(id = R.drawable.img_4),
-                        contentDescription = "Korean Pendant",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .width(280.dp)
-                            .height(180.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                    )
-
-
-
                 }
 
                 Spacer(modifier = Modifier.height(5.dp))
@@ -441,38 +423,39 @@ fun LandingScreen(navController: NavController) {
                 Text(
                     text = "Delicate, timeless, and effortlessly chic",
                     style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
                 )
 
+
+
                 Spacer(modifier = Modifier.height(15.dp))
 
-
-                Button(
-                    onClick = { navController.navigate(ROUT_PRODUCT_SCREEN_LIST)},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.DarkGray,
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Text("View All Products")
-                }
-
-                Spacer(modifier = Modifier.height(35.dp))
-
-                // Auto-slide carousel logic
-                val carouselImages = listOf(R.drawable.img, R.drawable.img_2, R.drawable.img_1)
+                // ✅ Bottom Carousel (enlarged)
+                val carouselImages = listOf(R.drawable.add3, R.drawable.add2, R.drawable.add4)
                 var currentImageIndex by remember { mutableStateOf(0) }
 
                 LaunchedEffect(Unit) {
                     while (true) {
-                        delay(1000) // 1 second
+                        delay(5000) // slide every 3 seconds
                         currentImageIndex = (currentImageIndex + 1) % carouselImages.size
                     }
+                }
+
+                AnimatedContent(
+                    targetState = currentImageIndex,
+                    label = "carousel"
+                ) { index ->
+                    Image(
+                        painter = painterResource(id = carouselImages[index]),
+                        contentDescription = "Carousel Image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(600.dp) // ⬆ Increased from 220.dp to 320.dp
+                            .padding(16.dp)
+
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -480,11 +463,8 @@ fun LandingScreen(navController: NavController) {
                 Text(
                     text = "Find an everyday statement piece - simple but elegant",
                     fontSize = 16.sp,
-                    textAlign = TextAlign.Center,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
                 )
-
-
             }
         }
     }

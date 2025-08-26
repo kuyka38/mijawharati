@@ -25,7 +25,21 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.*
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -60,8 +74,11 @@ fun ProductScreen(navController: NavController, viewModel: ProductViewModel) {
     var searchQuery by remember { mutableStateOf("") }
 
     var selectedProduct by remember { mutableStateOf<Product?>(null) }
-    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val bottomSheetState = androidx.compose.material3.rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
+
+    // ✅ Local cart badge count (increments when Add to Cart is tapped)
+    var cartCount by remember { mutableStateOf(0) }
 
     val filteredProducts = productList.filter {
         it.name.contains(searchQuery, ignoreCase = true)
@@ -79,6 +96,26 @@ fun ProductScreen(navController: NavController, viewModel: ProductViewModel) {
                                 contentDescription = "Back",
                                 tint = CreamWhite
                             )
+                        }
+                    },
+                    actions = {
+                        // ✅ Cart icon with badge
+                        IconButton(onClick = { navController.navigate(ROUT_CART) }) {
+                            BadgedBox(
+                                badge = {
+                                    if (cartCount > 0) {
+                                        Badge {
+                                            Text(cartCount.toString(), color = CreamWhite)
+                                        }
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ShoppingCart,
+                                    contentDescription = "Cart",
+                                    tint = CreamWhite
+                                )
+                            }
                         }
                     },
                     colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = EmeraldGreen)
@@ -142,7 +179,8 @@ fun ProductScreen(navController: NavController, viewModel: ProductViewModel) {
         ) {
             ProductDetailContent(
                 product = selectedProduct!!,
-                viewModel = viewModel
+                viewModel = viewModel,
+                onCartAdded = { cartCount++ } // ✅ increment badge when adding
             )
         }
     }
@@ -209,7 +247,11 @@ fun ProductCard(product: Product, onClick: () -> Unit, viewModel: ProductViewMod
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun ProductDetailContent(product: Product, viewModel: ProductViewModel) {
+fun ProductDetailContent(
+    product: Product,
+    viewModel: ProductViewModel,
+    onCartAdded: () -> Unit // ✅ callback to update badge
+) {
     val context = LocalContext.current
 
     Column(
@@ -257,12 +299,15 @@ fun ProductDetailContent(product: Product, viewModel: ProductViewModel) {
         }
 
         // ✅ Add to Cart button below and wide
-        Button(
-            onClick = { viewModel.addToCart(product) },
+        androidx.compose.material3.Button(
+            onClick = {
+                viewModel.addToCart(product)
+                onCartAdded() // ✅ update the badge count
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
             shape = RoundedCornerShape(20.dp)
         ) {
             Icon(Icons.Default.ShoppingCart, contentDescription = "Cart", tint = CreamWhite)

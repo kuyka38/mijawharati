@@ -68,12 +68,11 @@ fun RegisterScreen(
 
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(R.drawable.hibiscus),
-                    contentDescription = "MiJawharati Logo",
-                    modifier = Modifier
-                        .size(70.dp)
-                        .padding(bottom = 8.dp)
+                Icon(
+                    painter = painterResource(id = R.drawable.hibiscus),
+                    contentDescription = "App Logo",
+                    modifier = Modifier.size(64.dp),
+                    tint = EmeraldGreen
                 )
 
                 Text(
@@ -93,7 +92,7 @@ fun RegisterScreen(
 
                 Text(
                     text = "Create Account",
-                    fontSize = 29.sp,
+                    fontSize = 26.sp,
                     color = EmeraldGreen
 
                 )
