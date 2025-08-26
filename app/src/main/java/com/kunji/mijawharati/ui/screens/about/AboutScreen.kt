@@ -119,11 +119,7 @@ fun AboutScreen(navController: NavController) {
                     color = Color(0xFF046A38)
                 )
                 Text(
-                    text = "“MiJawharati was born from a deep love for beauty that speaks — pieces that hold meaning, memory, and strength.\n" +
-                            "\n" +
-                            "Every design reflects a part of who we are — bold, graceful, and unapologetically unique.\n" +
-                            "\n" +
-                            "Thank you for being part of this journey with me.”\n" +
+                    text = "MiJawharati was born from a deep love for beauty that speaks — pieces that hold meaning, memory, and strength.\n" +
                             "\n" +
                             "– Kuyuka",
                     fontSize = 16.sp,

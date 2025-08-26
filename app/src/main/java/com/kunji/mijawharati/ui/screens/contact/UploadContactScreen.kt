@@ -73,50 +73,6 @@ fun UploadContactScreen(
             )
         },
 
-        bottomBar = {
-            NavigationBar(containerColor = EmeraldGreen) {
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                    label = { Text("Home") },
-                    selected = selectedIndex == 0,
-                    onClick = { ROUT_HOME },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = CreamWhite,
-                        selectedTextColor = CreamWhite,
-                        indicatorColor = EmeraldGreen,
-                        unselectedIconColor = CreamWhite.copy(alpha = 0.6f),
-                        unselectedTextColor = CreamWhite.copy(alpha = 0.6f)
-                    )
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
-                    label = { Text("Favorites") },
-                    selected = selectedIndex == 1,
-                    onClick = { ROUT_FAVORITES },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = CreamWhite,
-                        selectedTextColor = CreamWhite,
-                        indicatorColor = EmeraldGreen,
-                        unselectedIconColor = CreamWhite.copy(alpha = 0.6f),
-                        unselectedTextColor = CreamWhite.copy(alpha = 0.6f)
-                    )
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Cart") },
-                    label = { Text("Cart") },
-                    selected = selectedIndex == 2,
-                    onClick = { ROUT_CART },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = CreamWhite,
-                        selectedTextColor = CreamWhite,
-                        indicatorColor = EmeraldGreen,
-                        unselectedIconColor = CreamWhite.copy(alpha = 0.6f),
-                        unselectedTextColor = CreamWhite.copy(alpha = 0.6f)
-                    )
-                )
-            }
-        },
-
         content = { paddingValues ->
             Box(
                 modifier = Modifier

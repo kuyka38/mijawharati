@@ -18,6 +18,7 @@ const val ROUT_ANKLETS = "anklets"
 const val ROUT_PRODUCT_SCREEN_LIST = "productscreenlist"
 const val ROUT_FAVORITES = "favorites"
 const val ROUT_PROFILE = "profile"
+const val ROUT_PRIVACY = "privacy"
 
 //Content
 const val ROUT_UPLOAD_CONTACT = "upload_contact"

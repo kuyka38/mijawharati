@@ -63,6 +63,7 @@ import com.kunji.mijawharati.navigation.ROUT_CART
 import com.kunji.mijawharati.navigation.ROUT_EARRINGS
 import com.kunji.mijawharati.navigation.ROUT_FAVORITES
 import com.kunji.mijawharati.navigation.ROUT_NECKLACES
+import com.kunji.mijawharati.navigation.ROUT_PRIVACY
 import com.kunji.mijawharati.navigation.ROUT_PRODUCT_SCREEN_LIST
 import com.kunji.mijawharati.navigation.ROUT_PROFILE
 import com.kunji.mijawharati.navigation.ROUT_RINGS
@@ -177,6 +178,8 @@ fun LandingScreen(navController: NavController) {
                             }
                     )
 
+                    Spacer(modifier = Modifier.height(17.dp))
+
                     Text(
                         text = "About us",
                         fontSize = 18.sp,
@@ -186,6 +189,21 @@ fun LandingScreen(navController: NavController) {
                             .clickable {
                                 scope.launch { drawerState.close() }
                                 navController.navigate("AboutScreen")
+                            }
+                    )
+
+                    Spacer(modifier = Modifier.height(17.dp))
+
+
+                    Text(
+                        text = "Privacy Policy",
+                        fontSize = 18.sp,
+                        color = EmeraldGreen,
+                        modifier = Modifier
+                            .padding(vertical = 12.dp)
+                            .clickable {
+                                scope.launch { drawerState.close() }
+                                navController.navigate(ROUT_PRIVACY)
                             }
                     )
 
@@ -352,7 +370,7 @@ fun LandingScreen(navController: NavController) {
 
                 Text(
                     text = "Shop by Categories",
-                    fontSize = 25.sp,
+                    fontSize = 23.sp,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
                 )
@@ -363,8 +381,8 @@ fun LandingScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Upcoming Korean Collection",
-                    fontSize = 25.sp,
+                    text = "Unique  Pieces",
+                    fontSize = 23.sp,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 15.dp, bottom = 8.dp)
                 )
@@ -421,25 +439,40 @@ fun LandingScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 Text(
-                    text = "Delicate, timeless, and effortlessly chic — our upcoming Korean Collection is your next jewellery obsession.",
+                    text = "Delicate, timeless, and effortlessly chic",
                     style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                Box(
+
+                Button(
+                    onClick = { navController.navigate(ROUT_PRODUCT_SCREEN_LIST)},
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(350.dp),
-                    contentAlignment = Alignment.Center
+                        .padding(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.DarkGray,
+                        contentColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(10.dp)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.add),
-                        contentDescription = "Centered Image",
-                        modifier = Modifier.size(1200.dp)
-                    )
+                    Text("View All Products")
+                }
+
+                Spacer(modifier = Modifier.height(35.dp))
+
+                // Auto-slide carousel logic
+                val carouselImages = listOf(R.drawable.img, R.drawable.img_2, R.drawable.img_1)
+                var currentImageIndex by remember { mutableStateOf(0) }
+
+                LaunchedEffect(Unit) {
+                    while (true) {
+                        delay(1000) // 1 second
+                        currentImageIndex = (currentImageIndex + 1) % carouselImages.size
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -451,19 +484,7 @@ fun LandingScreen(navController: NavController) {
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 8.dp)
                 )
 
-                Button(
-                    onClick = { navController.navigate(ROUT_PRODUCT_SCREEN_LIST)},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = EmeraldGreen,
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Text("View All Products")
-                }
+
             }
         }
     }

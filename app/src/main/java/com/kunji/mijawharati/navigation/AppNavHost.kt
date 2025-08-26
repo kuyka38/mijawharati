@@ -1,6 +1,5 @@
 package com.kunji.mijawharati.navigation
 
-
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -34,6 +33,7 @@ import com.kunji.mijawharati.ui.screens.items.WatchesScreen
 import com.kunji.mijawharati.ui.screens.landing.LandingScreen
 import com.kunji.mijawharati.ui.screens.onboarding.OnboardingScreen
 import com.kunji.mijawharati.ui.screens.picture.PictureScreen
+import com.kunji.mijawharati.ui.screens.privacy.PrivacyScreen
 import com.kunji.mijawharati.ui.screens.products.AddProductScreen
 import com.kunji.mijawharati.ui.screens.products.CartScreen
 import com.kunji.mijawharati.ui.screens.products.EditProductScreen
@@ -42,8 +42,8 @@ import com.kunji.mijawharati.ui.theme.screens.contact.UploadContactScreen
 import com.kunji.mijawharati.ui.theme.screens.contact.ViewContactScreen
 import com.kunji.mijawharati.viewmodel.ContactViewModel
 import com.kunji.mijawharati.viewmodel.ProductViewModel
-import com.kunji.mijawharati.ui.screens.profile.ProfileScreen
 import com.kunji.mijawharati.ui.screens.products.ProductScreen
+import com.kunji.mijawharati.ui.screens.profile.ProfileScreen
 import com.kunji.swaggy.ui.screens.products.ProductListScreen
 
 
@@ -52,7 +52,7 @@ import com.kunji.swaggy.ui.screens.products.ProductListScreen
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_CART,
+    startDestination: String = ROUT_LANDING,
     productViewModel: ProductViewModel = viewModel(),
 
     ) {
@@ -142,6 +142,9 @@ fun AppNavHost(
 
         composable(ROUT_FAVORITES) {
             FavouriteScreen(navController,productViewModel)
+        }
+        composable(ROUT_PRIVACY) {
+            PrivacyScreen(navController)
         }
 
 

@@ -112,7 +112,7 @@ fun CartScreen(navController: NavController, viewModel: ProductViewModel) {
                                 ),
                                 modifier = Modifier.weight(1f)
                             ) {
-                                Text("Message Seller", color = EmeraldGreen, fontSize = 14.sp)
+                                Text("Enter Details", color = EmeraldGreen, fontSize = 14.sp)
                             }
 
                             Button(
