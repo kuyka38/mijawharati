@@ -1,5 +1,6 @@
 package com.kunji.mijawharati.ui.screens.products
 
+import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -7,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -20,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.kunji.mijawharati.model.Product
@@ -34,7 +37,7 @@ import com.kunji.mijawharati.viewmodel.ProductViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(navController: NavController, viewModel: ProductViewModel) {
-    val mContext = LocalContext.current
+    val context = LocalContext.current
     val cartProducts by viewModel.cartProducts.observeAsState(emptyList())
 
     // Quantities map
@@ -66,32 +69,63 @@ fun CartScreen(navController: NavController, viewModel: ProductViewModel) {
         bottomBar = {
             Column {
                 if (cartProducts.isNotEmpty()) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.White)
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text("Total:", fontSize = 14.sp, color = Color.Gray)
-                            Text(
-                                text = "Ksh${"%.2f".format(totalPrice)}",
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = EmeraldGreen
-                            )
-                        }
-                        Button(
-                            onClick = {
-                                val simToolKitLaunchIntent =
-                                    mContext.packageManager.getLaunchIntentForPackage("com.android.stk")
-                                simToolKitLaunchIntent?.let { mContext.startActivity(it) }
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen)
+                    Column(modifier = Modifier.background(Color.White)) {
+                        // Total Price Row
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Checkout", color = CreamWhite, fontSize = 16.sp)
+                            Column {
+                                Text("Total (VAT included):", fontSize = 14.sp, color = Color.Gray)
+                                Text(
+                                    text = "Ksh${"%.2f".format(totalPrice)}",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = EmeraldGreen
+                                )
+                            }
+                        }
+
+                        // Message Seller and Pay Now Buttons
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = {
+                                    if (cartProducts.isNotEmpty()) {
+                                        val sellerPhone = cartProducts.first().phone
+                                        val smsIntent = Intent(Intent.ACTION_SENDTO)
+                                        smsIntent.data = "smsto:$sellerPhone".toUri()
+                                        smsIntent.putExtra("sms_body", "Hello this is my address [  ],I want to buy [  ] and This are the delivery instructions [  ].")
+                                        context.startActivity(smsIntent)
+                                    }
+                                },
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = EmeraldGreen
+                                ),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Message Seller", color = EmeraldGreen, fontSize = 14.sp)
+                            }
+
+                            Button(
+                                onClick = {
+                                    val simToolKitLaunchIntent =
+                                        context.packageManager.getLaunchIntentForPackage("com.android.stk")
+                                    simToolKitLaunchIntent?.let { context.startActivity(it) }
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = EmeraldGreen),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Pay Now", color = CreamWhite, fontSize = 14.sp)
+                            }
                         }
                     }
                 }
@@ -125,7 +159,7 @@ fun CartScreen(navController: NavController, viewModel: ProductViewModel) {
                         )
                     )
                     NavigationBarItem(
-                        selected = true, // current screen
+                        selected = true,
                         onClick = { /* stay on cart */ },
                         icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Cart") },
                         label = { Text("Cart") },
@@ -249,8 +283,7 @@ fun CartProductItem(
                     }
                 }
 
-                // Reduced space (was 4.dp before, now 2.dp)
-                Spacer(modifier = Modifier.height(0.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 // Price (quantity applied)
                 Text(
