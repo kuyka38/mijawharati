@@ -64,12 +64,11 @@ fun WatchesScreen(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
     val watchProducts = listOf(
-        WatchProduct(1, "Elegant Watch", "Timeless Co.", "KES 2,500", 4.8, R.drawable.watch1),
+
         WatchProduct(2, "Pink Dial Watch", "UrbanStyle", "KES 2,800", 4.6, R.drawable.watch2),
         WatchProduct(3, "Elevate Gold Watch", "FitTech", "KES 2,200", 4.7, R.drawable.watch3),
         WatchProduct(4, "Breda Jane Watch", "BREDA Jane", "KES 3,000", 4.9, R.drawable.watch4),
         WatchProduct(5, "Nebraska-Kearney Watch", "Nebraska Kearney", "KES 4,000", 4.9, R.drawable.watch5),
-        WatchProduct(6, "Tissot Watch", "Tissot", "KES 3,000", 4.9, R.drawable.watch6),
     )
 
     Scaffold(

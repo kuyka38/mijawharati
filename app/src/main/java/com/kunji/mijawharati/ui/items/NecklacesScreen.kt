@@ -66,10 +66,8 @@ fun NecklacesScreen(navController: NavController) {
         mutableStateListOf(
             NecklaceProduct(1, "Gold Necklace", "Luxury Gems", "KES 800", 4.8, R.drawable.neck1),
             NecklaceProduct(2, "Swan Necklace", "swarovski", "KES 1200", 4.7, R.drawable.neck2),
-            NecklaceProduct(3, "Butterfly Necklace", "Golden Jewels", "KES 1,200", 4.9, R.drawable.neck3),
             NecklaceProduct(4, "Van Cleef Necklace", "Van Cleef", "KES 900", 4.6, R.drawable.neck4),
             NecklaceProduct(5, "Silver Chrome Hearts", "Chrome Hearts", "KES 1000", 4.6, R.drawable.neck5),
-            NecklaceProduct(6, "Gold Chrome Hearts", "Chrome Hearts", "KES 1000", 4.6, R.drawable.neck6)
         )
     }
 

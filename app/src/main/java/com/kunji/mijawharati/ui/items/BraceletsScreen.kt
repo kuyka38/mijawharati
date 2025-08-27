@@ -62,7 +62,6 @@ fun BraceletsScreen(navController: NavController) {
 
     val braceletProducts = listOf(
         BraceletProduct(1, "Classic Gold Bracelet", "Golden Touch", "KES 1,200", 4.7, R.drawable.bracelet4),
-        BraceletProduct(2, "Dior Bracelet", "Dior", "KES 950", 4.6, R.drawable.bracelet1),
         BraceletProduct(3, "Pink Gem Bracelet", "Versace", "KES 1,100", 4.8, R.drawable.bracelet3),
         BraceletProduct(4, "Diamond bracelet", "Glam Jewels", "KES 1,500", 4.9, R.drawable.bracelet2),
         BraceletProduct(5, "Men-Gemstone Bracelet", "Glam Jewels", "KES 1,500", 4.9, R.drawable.bracelet5),

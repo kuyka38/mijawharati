@@ -87,7 +87,7 @@ fun ProductGrid(navController: NavController) {
         Product("Necklaces", R.drawable.img_19),
         Product("Bracelets", R.drawable.img_18),
         Product("Rings", R.drawable.img_20),
-        Product("Earings", R.drawable.earing),
+        Product("Earrings", R.drawable.earing),
         Product("Watches", R.drawable.img_22),
         Product("Anklets", R.drawable.ankletback)
     )

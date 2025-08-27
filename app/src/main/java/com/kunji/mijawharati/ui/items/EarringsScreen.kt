@@ -63,8 +63,6 @@ fun EarringsScreen(navController: NavController) {
     val earringProducts = listOf(
         EarringProduct(1, "Diamond Earring", "Ocean Elegance", "KES 200", 4.7, R.drawable.earing1),
         EarringProduct(2, "Butterfly-Crystal Earring", "Golden Touch", "KES 400", 4.6, R.drawable.earing2),
-        EarringProduct(3, "Gold-Flower Earring", "House of bay", "KES 500", 4.9, R.drawable.earing3),
-        EarringProduct(4, "Chanel Earrings", "CoCo Chanel", "KES 400", 4.5, R.drawable.earing4),
         EarringProduct(5, "Men Silver Studs", "Shein", "KES 900", 4.5, R.drawable.earing5),
         EarringProduct(6, "Men Chrome Studs", "Chrome Hearts", "KES 800", 4.5, R.drawable.earing6),
     )

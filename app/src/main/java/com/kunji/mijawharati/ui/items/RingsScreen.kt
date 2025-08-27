@@ -64,8 +64,6 @@ fun RingsScreen(navController: NavController) {
         RingProduct(1, "Diamond Solitaire Ring", "Elegant Gems", "KES 500", 4.9, R.drawable.ring1),
         RingProduct(2, "Purple Gem Ring", "Bvlgari", "KES 500", 4.7, R.drawable.ring2),
         RingProduct(3, "Sapphire Stone Ring", "Blue Nile", "KES 600", 4.6, R.drawable.ring3),
-        RingProduct(4, "Gold Ring", "Mejuri", "KES 800", 4.5, R.drawable.ring4),
-        RingProduct(4, " Men Silver  Ring", "Monica Veduri", "KES 700", 4.5, R.drawable.ring5),
         RingProduct(4, "Silver-Snake Ring", "Graff", "KES 850", 4.5, R.drawable.ring6),
     )
 
