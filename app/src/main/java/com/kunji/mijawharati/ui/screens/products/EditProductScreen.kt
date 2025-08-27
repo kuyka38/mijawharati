@@ -27,11 +27,9 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.kunji.mijawharati.navigation.ROUT_ADD_PRODUCT
 import com.kunji.mijawharati.navigation.ROUT_PRODUCT_LIST
+import com.kunji.mijawharati.ui.theme.EmeraldGreen
+import com.kunji.mijawharati.ui.theme.CreamWhite
 import com.kunji.mijawharati.viewmodel.ProductViewModel
-
-// MiJawharati Theme Colors
-private val EmeraldGreen = Color(0xFF006A4E)
-private val CreamWhite = Color(0xFFFCFCF7)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

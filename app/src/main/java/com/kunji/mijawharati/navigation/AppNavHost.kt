@@ -52,7 +52,7 @@ import com.kunji.swaggy.ui.screens.products.ProductListScreen
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUT_ADMINDASHBOARD,
+    startDestination: String = ROUT_PRODUCT_LIST,
     productViewModel: ProductViewModel = viewModel(),
 
     ) {
